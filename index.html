@@ -3,302 +3,466 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>דשבורד סקר מותג מרכז הספורט - שנת תשפ״ה</title>
+  <title>דשבורד מנהלים אינטראקטיבי | מרכז הספורט האוניברסיטאי תשפ״ה</title>
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Fonts Heebo -->
+  <!-- Google Fonts: Heebo -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
     html { scroll-behavior: smooth; }
     body { font-family: 'Heebo', sans-serif; }
     @media print {
       .no-print { display: none !important; }
-      body { background: white; color: black; }
+      body { background: white !important; color: black !important; }
+      .break-inside-avoid { break-inside: avoid; }
     }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    mark { background-color: #fef08a; padding: 0 2px; border-radius: 2px; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen selection:bg-indigo-600 selection:text-white">
 
-  <!-- Header & Sticky Sub-Navigation -->
-  <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+  <!-- Scroll Progress Indicator -->
+  <div id="scrollProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 z-50 transition-all duration-150" style="width: 0%"></div>
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-lg border-b border-slate-800 backdrop-blur-md bg-slate-900/95">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="py-4 flex flex-wrap justify-between items-center gap-4">
+      <div class="py-3 flex flex-wrap justify-between items-center gap-4">
+        
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-xl shadow">🏋️‍♂️</div>
+          <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg border border-indigo-400/30 transform hover:rotate-6 transition">
+            🏋️‍♂️
+          </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="text-xl font-black tracking-tight">מרכז הספורט האוניברסיטאי</h1>
-              <span class="bg-indigo-500/30 text-indigo-300 text-[11px] font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">שנת תשפ״ה</span>
+              <h1 class="text-lg sm:text-xl font-black tracking-tight">מרכז הספורט האוניברסיטאי</h1>
+              <span class="bg-indigo-500/20 text-indigo-300 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-indigo-400/30">תשפ״ה • 2024/25</span>
             </div>
-            <p class="text-xs text-slate-400">דשבורד ממצאי סקר מותג וצרכים • נערך בדצמבר 2024 (כסלו–טבת תשפ״ה)</p>
+            <p class="text-xs text-slate-400">דשבורד מנהלים אינטראקטיבי: ממצאי סקר מותג, ערוצי שיווק ומשובי סטודנטים</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 text-xs">
-          <div class="bg-slate-800 px-3.5 py-1.5 rounded-full border border-slate-700 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>תאריכי הסקר: <strong>12–29 בדצמבר 2024 (תשפ״ה)</strong></span>
+        <div class="flex items-center gap-2 sm:gap-3 text-xs">
+          <div class="hidden sm:flex bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/80 items-center gap-2 text-slate-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>מדגם: <strong>283 משתתפים</strong> (דצמבר 2024)</span>
           </div>
-          <button onclick="window.print()" class="no-print bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-full transition shadow flex items-center gap-1.5">
-            <span>🖨️</span> הדפסה / PDF
+
+          <button id="exportCsvBtn" class="no-print bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95">
+            <span>📥</span>
+            <span class="hidden md:inline">ייצוא משובים ל-CSV</span>
+          </button>
+
+          <button onclick="window.print()" class="no-print bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-xl transition shadow flex items-center gap-1.5 active:scale-95">
+            <span>🖨️</span>
+            <span>הדפסה / PDF</span>
           </button>
         </div>
+
       </div>
 
-      <!-- In-Page Scroll Anchors -->
-      <nav class="flex border-t border-slate-800 py-2.5 overflow-x-auto gap-4 text-xs font-medium text-slate-300 no-print">
-        <a href="#kpi-section" class="hover:text-white transition">מדדי מפתח</a>
-        <a href="#charts-awareness" class="hover:text-white transition">מודעות וחשיפה</a>
-        <a href="#charts-drivers" class="hover:text-white transition">מניעים ופעילויות מבוקשות</a>
-        <a href="#charts-perception" class="hover:text-white transition">תפיסת מותג ושימוש</a>
-        <a href="#student-voices" class="hover:text-white transition">קולות הסטודנטים</a>
-        <a href="#action-plan" class="hover:text-white transition">תוכנית עבודה לשנת תשפ״ה</a>
+      <!-- Navigation Tabs -->
+      <nav id="navTabs" class="flex border-t border-slate-800 py-2 overflow-x-auto gap-4 sm:gap-6 text-xs font-medium text-slate-400 custom-scrollbar no-print">
+        <a href="#kpi-section" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מדדי מפתח</a>
+        <a href="#demographics-section" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">פילוח דמוגרפי</a>
+        <a href="#charts-awareness" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מודעות וחשיפה</a>
+        <a href="#charts-drivers" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מניעי הגעה ופעילויות</a>
+        <a href="#charts-perception" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">תפיסת מותג ושימוש</a>
+        <a href="#student-voices" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">קולות השטח (משובים)</a>
+        <a href="#action-plan" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">תוכנית עבודה</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Single Page Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
-    <!-- Survey Meta Banner -->
-    <div class="bg-indigo-50 border border-indigo-200/80 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">📅</span>
-        <div>
-          <h2 class="text-sm font-bold text-indigo-950">מועד עריכת הסקר: שנת תשפ״ה</h2>
-          <p class="text-xs text-indigo-700">איסוף הנתונים התקיים בין ה-12.12.2024 ל-29.12.2024 (י״א כסלו – כ״ח כסלו תשפ״ה)</p>
-        </div>
-      </div>
-      <div class="text-xs text-indigo-900 bg-white px-3 py-1.5 rounded-xl border border-indigo-200 font-semibold">
-        סה״כ השתתפו: 283 משיבים
-      </div>
-    </div>
-
-    <!-- 1. KPI Cards Section -->
+    <!-- KPI Section with Animated Counters -->
     <section id="kpi-section" class="space-y-4">
-      <div class="border-r-4 border-indigo-600 pr-3">
-        <h2 class="text-lg font-black text-slate-900">תמונת מצב כללית (KPIs) - תשפ״ה</h2>
-        <p class="text-xs text-slate-500">נתוני בסיס מתוך 283 הנשאלים בסקר</p>
+      <div class="flex items-center justify-between border-r-4 border-indigo-600 pr-3">
+        <div>
+          <h2 class="text-lg font-black text-slate-900">תמונת מצב מנהלים (Executive KPIs)</h2>
+          <p class="text-xs text-slate-500">תמונת מאקרו מתוך 283 משיבים בסקר תשפ״ה</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-100">
+          N = 283
+        </span>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative">
-          <span class="text-xs font-bold text-slate-400 uppercase">גודל המדגם</span>
-          <div class="text-3xl font-black text-slate-900 mt-2">283</div>
-          <p class="text-xs text-slate-600 mt-1">281 סטודנטים (99.3%) ו-2 אנשי סגל</p>
-          <div class="absolute left-4 bottom-4 text-3xl opacity-15">🎓</div>
+        <!-- KPI 1 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
+          <div class="flex justify-between items-start">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">מדגם הסקר הכולל</span>
+            <span class="text-2xl opacity-40 group-hover:scale-110 transition">🎓</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 mt-2 font-mono" data-counter="283">0</div>
+          <div class="mt-2 text-xs text-slate-600 flex items-center justify-between">
+            <span>סטודנטים פעילים</span>
+            <span class="font-bold text-emerald-600">99.3%</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-0.5">281 סטודנטים ו-2 עובדי סגל</p>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-rose-200 bg-gradient-to-br from-white to-rose-50/50 shadow-sm relative">
-          <span class="text-xs font-bold text-rose-600 uppercase">חוסר מודעות לקיום המרכז</span>
-          <div class="text-3xl font-black text-rose-600 mt-2">58.7%</div>
-          <p class="text-xs text-rose-700 mt-1">166 סטודנטים לא ידעו כלל על המרכז</p>
-          <div class="absolute left-4 bottom-4 text-3xl opacity-15">📢</div>
+        <!-- KPI 2 -->
+        <div class="bg-gradient-to-br from-rose-50/60 to-white p-5 rounded-2xl border border-rose-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
+          <div class="flex justify-between items-start">
+            <span class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">חסם מודעות קריטי</span>
+            <span class="text-2xl opacity-40 group-hover:scale-110 transition">📢</span>
+          </div>
+          <div class="text-3xl font-black text-rose-600 mt-2 font-mono"><span data-counter="58.7" data-decimals="1">0</span>%</div>
+          <div class="mt-2 text-xs text-rose-800 flex items-center justify-between">
+            <span>166 סטודנטים</span>
+            <span class="font-bold bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded text-[10px]">חסם #1</span>
+          </div>
+          <p class="text-[11px] text-rose-600/80 mt-0.5">לא ידעו כלל שקיים מרכז ספורט</p>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative">
-          <span class="text-xs font-bold text-indigo-600 uppercase">צורך מוביל: ציוד וחוגים</span>
-          <div class="text-3xl font-black text-indigo-600 mt-2">78 / 76</div>
-          <p class="text-xs text-slate-600 mt-1">דרישה למכשירי כושר ופילאטיס/קרוספיט</p>
-          <div class="absolute left-4 bottom-4 text-3xl opacity-15">🏋</div>
+        <!-- KPI 3 -->
+        <div class="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
+          <div class="flex justify-between items-start">
+            <span class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">הצורך המוביל במתקנים</span>
+            <span class="text-2xl opacity-40 group-hover:scale-110 transition">🏋️</span>
+          </div>
+          <div class="text-3xl font-black text-indigo-700 mt-2 font-mono">
+            <span data-counter="78">0</span> / <span data-counter="76">0</span>
+          </div>
+          <div class="mt-2 text-xs text-indigo-900 flex items-center justify-between">
+            <span>מכשור מתקדם & חוגים</span>
+            <span class="font-bold text-indigo-600">54.4%</span>
+          </div>
+          <p class="text-[11px] text-indigo-600/80 mt-0.5">דרישה לפילאטיס מכשירים וקרוספיט</p>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50 shadow-sm relative">
-          <span class="text-xs font-bold text-emerald-600 uppercase">פעילות מבוקשת ביותר</span>
-          <div class="text-3xl font-black text-emerald-600 mt-2">82</div>
-          <p class="text-xs text-slate-600 mt-1">הרצאות וסדנאות אורח חיים בריא</p>
-          <div class="absolute left-4 bottom-4 text-3xl opacity-15">🥗</div>
+        <!-- KPI 4 -->
+        <div class="bg-gradient-to-br from-emerald-50/60 to-white p-5 rounded-2xl border border-emerald-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
+          <div class="flex justify-between items-start">
+            <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">פעילות מבוקשת ביותר</span>
+            <span class="text-2xl opacity-40 group-hover:scale-110 transition">🥗</span>
+          </div>
+          <div class="text-3xl font-black text-emerald-600 mt-2 font-mono" data-counter="82">0</div>
+          <div class="mt-2 text-xs text-emerald-800 flex items-center justify-between">
+            <span>סדנאות אורח חיים בריא</span>
+            <span class="font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[10px]">ביקוש שיא</span>
+          </div>
+          <p class="text-[11px] text-emerald-600/80 mt-0.5">צורך בתוכן של תזונה, הרצאות ו-Wellness</p>
         </div>
 
       </div>
     </section>
 
-    <!-- 2. Awareness & Marketing Channels -->
+    <!-- Demographics Section -->
+    <section id="demographics-section" class="space-y-4">
+      <div class="border-r-4 border-slate-700 pr-3">
+        <h2 class="text-lg font-black text-slate-900">פילוח דמוגרפי של קהל היעד</h2>
+        <p class="text-xs text-slate-500">התפלגות המשיבים לפי שנת לימוד, גיל ותחומי התמחות מובילים בקמפוס</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-sm text-slate-800">התפלגות לפי שנת לימוד</h3>
+              <span class="text-[11px] text-indigo-600 font-semibold">רוב מובהק לשנה א'-ב'</span>
+            </div>
+            <div class="relative h-48">
+              <canvas id="yearsChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
+            <span>שנה א' (133 - 47.0%)</span>
+            <span>שנה ב' (92 - 32.5%)</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-sm text-slate-800">התפלגות קבוצות גיל</h3>
+              <span class="text-[11px] text-indigo-600 font-semibold">קהל צעיר 18–24</span>
+            </div>
+            <div class="relative h-48">
+              <canvas id="ageChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
+            <span>גילאי 18-24 (214 - 75.6%)</span>
+            <span>גילאי 25-34 (67 - 23.7%)</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">חוגי הלימוד המובילים בסקר</h3>
+            <p class="text-xs text-slate-500 mb-3">ייצוג נרחב למקצועות הבריאות, המדעים והחברה</p>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-700">ריפוי בעיסוק & פיזיותרפיה</span>
+                <span class="font-bold text-indigo-600">31 משיבים</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-700">מערכות מידע & מדעי המחשב</span>
+                <span class="font-bold text-indigo-600">29 משיבים</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-700">תקשורת & שירותי אנוש</span>
+                <span class="font-bold text-indigo-600">24 משיבים</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-700">כלכלה & משפטים</span>
+                <span class="font-bold text-indigo-600">23 משיבים</span>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">הסקר כולל מעל 35 תוכניות לימוד שונות ברחבי הקמפוס.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Awareness Section -->
     <section id="charts-awareness" class="space-y-4">
       <div class="border-r-4 border-rose-500 pr-3">
-        <h2 class="text-lg font-black text-slate-900">מודעות למרכז ומקורות החשיפה</h2>
-        <p class="text-xs text-slate-500">ניתוח פערי השיווק מול ערוצי המידע הפעילים בקמפוס (נתוני תשפ״ה)</p>
+        <h2 class="text-lg font-black text-slate-900">מודעות למרכז ואפקטיביות ערוצי השיווק</h2>
+        <p class="text-xs text-slate-500">ניתוח פערי השיווק מול ערוצי המידע הפעילים בקמפוס</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
         <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-sm text-slate-800 mb-1">התפלגות מקורות החשיפה והמודעות</h3>
-          <p class="text-xs text-slate-500 mb-4">מספר משיבים לפי אופן גילוי המרכז</p>
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="font-bold text-sm text-slate-800">התפלגות המודעות וערוצי החשיפה</h3>
+              <p class="text-xs text-slate-500">מספר משיבים לפי אופן גילוי המרכז (לחץ על פלח לסינון)</p>
+            </div>
+          </div>
           <div class="relative h-64">
             <canvas id="awarenessChart"></canvas>
           </div>
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center space-y-4">
-          <div class="p-4 bg-rose-50 rounded-xl border border-rose-100">
-            <div class="font-bold text-rose-800 text-sm mb-1">פער חשיפה דיגיטלי חמור</div>
+          <div class="p-4 bg-rose-50/70 rounded-xl border border-rose-200">
+            <div class="flex items-center gap-2 font-bold text-rose-800 text-sm mb-1">
+              <span>⚠️</span>
+              <span>פער דיגיטלי חמור</span>
+            </div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              רק <strong>9 משיבים (3.2%)</strong> שמעו על המרכז ברשתות החברתיות, ורק <strong>17 (6.0%)</strong> דרך אתר האוניברסיטה.
+              רק <strong>9 משיבים (3.2%)</strong> שמעו על המרכז ברשתות החברתיות, ורק <strong>17 (6.0%)</strong> דרך אתר האוניברסיטה. מדובר בכשל שיווקי המותיר את רוב הקמפוס מנותק.
             </p>
           </div>
-          <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-            <div class="font-bold text-indigo-900 text-sm mb-1">ערוץ "מפה לאוזן" מוביל</div>
+
+          <div class="p-4 bg-indigo-50/70 rounded-xl border border-indigo-200">
+            <div class="flex items-center gap-2 font-bold text-indigo-900 text-sm mb-1">
+              <span>🗣️</span>
+              <span>"מפה לאוזן" כעוגן עיקרי</span>
+            </div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              <strong>80 משיבים</strong> גילו את המרכז מחברים ומכרים. הסטודנטים הם השגרירים הטובים ביותר, אך בהיעדר שיווק רשמי הרוב נותר בחוץ.
+              <strong>80 משיבים (68.4% ממי שמודע)</strong> גילו את המרכז מחברים ומכרים. הסטודנטים הם השגרירים הטובים ביותר, אך בהיעדר ערוצים רשמיים הפוטנציאל מוגבל.
             </p>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- 3. Drivers & Activities -->
+    <!-- Drivers & Activities Section -->
     <section id="charts-drivers" class="space-y-4">
       <div class="border-r-4 border-indigo-600 pr-3">
         <h2 class="text-lg font-black text-slate-900">גורמים מעודדי שימוש ופעילויות מבוקשות</h2>
-        <p class="text-xs text-slate-500">מה יביא את הסטודנטים להתאמן ואילו אירועים ימשכו קהל חדש</p>
+        <p class="text-xs text-slate-500">מה נדרש כדי להגביר את נוכחות הסטודנטים במתקנים</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-sm text-slate-800 mb-1">גורמים מעודדים להגברת השימוש (10 הגורמים)</h3>
-          <p class="text-xs text-slate-500 mb-4">מספר בחירות מתוך כלל המשיבים</p>
-          <div class="relative h-80">
-            <canvas id="driversChart"></canvas>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">10 הגורמים המובילים להגברת השימוש במרכז</h3>
+            <p class="text-xs text-slate-500 mb-4">מספר בחירות מתוך כלל המשיבים במרכז (שאלה מרובת אפשרויות)</p>
+            <div class="relative h-80">
+              <canvas id="driversChart"></canvas>
+            </div>
           </div>
+          <p class="mt-3 text-[11px] text-slate-400">דרישה בולטת לשדרוג חדר הכושר (78), פילאטיס/קרוספיט (76) ונוחות מקלחות (66).</p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-sm text-slate-800 mb-1">פעילויות חברתיות ותרבותיות מבוקשות</h3>
-          <p class="text-xs text-slate-500 mb-4">אירועים ופעילויות מובילות בקמפוס</p>
-          <div class="relative h-80">
-            <canvas id="activitiesChart"></canvas>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">פעילויות חברתיות ותרבותיות מועדפות</h3>
+            <p class="text-xs text-slate-500 mb-4">אירועים ופעילויות בעלות הביקוש הגבוה ביותר בקמפוס</p>
+            <div class="relative h-80">
+              <canvas id="activitiesChart"></canvas>
+            </div>
           </div>
+          <p class="mt-3 text-[11px] text-slate-400">אורח חיים בריא (Wellness) עוקף אפילו טורנירים תחרותיים בקרב הסטודנטים.</p>
         </div>
 
       </div>
     </section>
 
-    <!-- 4. Perception & Current Usage -->
+    <!-- Perception & Usage Funnel -->
     <section id="charts-perception" class="space-y-4">
       <div class="border-r-4 border-emerald-600 pr-3">
-        <h2 class="text-lg font-black text-slate-900">תפיסת המותג והשימוש הנוכחי במתקנים</h2>
-        <p class="text-xs text-slate-500">כיצד המרכז נתפס בעיני הסטודנטים ומה רמת הפעילות בפועל</p>
+        <h2 class="text-lg font-black text-slate-900">תפיסת המותג ומשפך השימוש בפועל</h2>
+        <p class="text-xs text-slate-500">כיצד נתפס המרכז בעיני המשתמשים מול נתוני ההמרה בפועל</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-sm text-slate-800 mb-1">תפיסת המותג והמאפיינים הבולטים</h3>
-          <p class="text-xs text-slate-500 mb-4">אסוציאציות חיוביות מול נקודות תורפה</p>
-          <div class="relative h-72">
-            <canvas id="brandPerceptionChart"></canvas>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="font-bold text-sm text-slate-800">מאפייני המותג הבולטים</h3>
+              <div class="flex items-center gap-2 text-[10px]">
+                <span class="inline-flex items-center gap-1 text-emerald-700 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>חוזקה</span>
+                <span class="inline-flex items-center gap-1 text-rose-700 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span>חסם/חולשה</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">תפיסות חיוביות מול נקודות תורפה שעלו מניתוח המאפיינים</p>
+            <div class="relative h-72">
+              <canvas id="brandPerceptionChart"></canvas>
+            </div>
           </div>
+          <p class="mt-3 text-[11px] text-slate-400">המרכז נתפס כנגיש (20) ומקדם בריאות (15), אך לוקה בחדשנות (10) ובציוד (7).</p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-sm text-slate-800 mb-1">שימוש קיים בשירותי מרכז הספורט</h3>
-          <p class="text-xs text-slate-500 mb-4">התפלגות השימוש בפועל במתקנים</p>
-          <div class="relative h-72">
-            <canvas id="usageChart"></canvas>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">משפך החשיפה והשימוש בפועל (Conversion Funnel)</h3>
+            <p class="text-xs text-slate-500 mb-4">התפלגות השימוש בשירותי המרכז מתוך 283 הנשאלים</p>
+            <div class="relative h-72">
+              <canvas id="usageChart"></canvas>
+            </div>
           </div>
+          <p class="mt-3 text-[11px] text-slate-400">רק 13.8% מכלל הנשאלים פעילים במתקנים. קיים פוטנציאל צמיחה עצום בקרב המודעים שלא מגיעים.</p>
         </div>
 
       </div>
     </section>
 
-    <!-- 5. Open Feedback Voices -->
+    <!-- Student Open Voices (Interactive) -->
     <section id="student-voices" class="space-y-4">
-      <div class="border-r-4 border-amber-500 pr-3 flex flex-col md:flex-row justify-between md:items-center gap-2">
+      <div class="border-r-4 border-amber-500 pr-3 flex flex-col md:flex-row justify-between md:items-center gap-3">
         <div>
-          <h2 class="text-lg font-black text-slate-900">קולות הסטודנטים (42 הצעות ורעיונות מהשטח)</h2>
-          <p class="text-xs text-slate-500">חיפוש וסינון ישיר של המשובים הפתוחים שנאספו בסקר תשפ״ה</p>
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-black text-slate-900">קולות השטח: הצעות ורעיונות הסטודנטים</h2>
+            <span id="quotesCountBadge" class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-all">
+              טוען משובים...
+            </span>
+          </div>
+          <p class="text-xs text-slate-500">כלל התגובות הפתוחות שנאספו בסקר תשפ״ה, מסווגות ומאפשרות חיפוש מהיר</p>
         </div>
-        <div class="w-full md:w-64 no-print">
-          <input type="text" id="commentSearch" oninput="filterQuotes()" placeholder="חיפוש חופשי (הפרדה, ציוד, שעות...)" class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+        <!-- Search Bar with Reset Icon -->
+        <div class="w-full md:w-72 no-print relative">
+          <input 
+            type="text" 
+            id="commentSearch" 
+            placeholder="חיפוש חופשי (הפרדה, מחיר, טניס, מקלחות...)" 
+            class="w-full pl-8 pr-8 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none shadow-sm transition"
+          >
+          <span class="absolute right-2.5 top-2.5 text-xs text-slate-400">🔍</span>
+          <button id="clearSearchBtn" class="hidden absolute left-2.5 top-2 text-xs text-slate-400 hover:text-slate-600 bg-slate-100 rounded-full w-4 h-4 flex items-center justify-center">✕</button>
         </div>
       </div>
 
-      <!-- Quick Filter Pills -->
-      <div class="flex flex-wrap gap-2 text-xs no-print">
-        <button onclick="setFilter('all')" class="quote-btn px-3 py-1 bg-slate-900 text-white rounded-lg">הכל (כל המשובים)</button>
-        <button onclick="setFilter('הפרדה')" class="quote-btn px-3 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg">הפרדה מגדרית ושעות נשים</button>
-        <button onclick="setFilter('ציוד')" class="quote-btn px-3 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg">ציוד, תחזוקה וניקיון</button>
-        <button onclick="setFilter('חוגים')" class="quote-btn px-3 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg">חוגים, יוגה ואימונים</button>
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap gap-2 text-xs no-print items-center">
+        <span class="text-slate-400 text-xs font-semibold ml-1">סינון לפי נושא:</span>
+        <button data-filter="all" class="filter-btn active-filter px-3 py-1.5 bg-slate-900 text-white font-medium rounded-xl shadow-sm transition">הכל (<span id="allCount">40</span>)</button>
+        <button data-filter="הפרדה ושעות נשים" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">הפרדה מגדרית ושעות נשים</button>
+        <button data-filter="מתקנים ותחזוקה" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">ציוד, שיפוץ וניקיון</button>
+        <button data-filter="חוגים ובריאות" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">חוגים, יוגה ובריאות</button>
+        <button data-filter="שירות, קהילה ומחיר" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">מחירים, מגרשים ושירות</button>
       </div>
 
-      <!-- Quotes Grid -->
+      <!-- Quotes Cards Grid -->
       <div id="quotesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Injected via JavaScript -->
+        <!-- Injected via dashboard.js -->
       </div>
     </section>
 
-    <!-- 6. Actionable Roadmap -->
-    <section id="action-plan" class="space-y-4">
+    <!-- Operational Roadmap -->
+    <section id="action-plan" class="space-y-4 break-inside-avoid">
       <div class="border-r-4 border-indigo-700 pr-3">
-        <h2 class="text-lg font-black text-slate-900">תוכנית עבודה אופרטיבית להנהלת המרכז (שנת תשפ״ה)</h2>
-        <p class="text-xs text-slate-500">4 עוגנים מרכזיים להפיכת המרכז למוקד קמפוס פעיל ורווחי</p>
+        <h2 class="text-lg font-black text-slate-900">תוכנית עבודה אופרטיבית להנהלה (שנת תשפ״ה)</h2>
+        <p class="text-xs text-slate-500">4 עוגנים למינוף הפוטנציאל הלא-מנוצל והפיכת המרכז למוקד תוסס ורווחי</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-rose-300 transition">
+          <div class="absolute top-0 right-0 w-1.5 h-full bg-rose-500"></div>
           <div>
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-sm">1</span>
-              <h3 class="font-bold text-slate-900 text-sm">קמפיין מודעות ודיגיטל מקיף</h3>
+            <div class="flex items-center gap-3 mb-2.5">
+              <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 font-black flex items-center justify-center text-sm">1</span>
+              <h3 class="font-bold text-slate-900 text-sm">קמפיין שיווק ומודעות דיגיטלי (Digital Awareness)</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
-              גישור מיידי על פער ה-58.7% בחוסר המודעות. הקמת ערוצי סושיאל פעילים (אינסטגרם/טיקטוק), חלוקת שבוע התנסות חינם בשבוע האוריינטציה, ושילוט דיגיטלי בבנייני הפקולטות הגדולות.
+              גישור מיידי על פער ה-<strong>58.7% בחוסר המודעות</strong>. הקמת ערוצי סושיאל (אינסטגרם/טיקטוק – "Instagram reels bro"), חלוקת שבוע התנסות חינם בשבוע האוריינטציה, ושילוט הכוונה בולט ודיגיטלי בכל הפקולטות.
             </p>
           </div>
-          <div class="text-[11px] font-bold text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg">
-            יעד: צמצום חוסר המודעות אל מתחת ל-20% כבר במהלך שנת תשפ״ה
+          <div class="text-[11px] font-bold text-rose-700 bg-rose-50/80 border border-rose-200/60 px-3 py-1.5 rounded-xl">
+            יעד מרכזי: הורדת שיעור חוסר המודעות אל מתחת ל-20% תוך סמסטר אחד.
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-amber-300 transition">
+          <div class="absolute top-0 right-0 w-1.5 h-full bg-amber-500"></div>
           <div>
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 font-bold flex items-center justify-center text-sm">2</span>
+            <div class="flex items-center gap-3 mb-2.5">
+              <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 font-black flex items-center justify-center text-sm">2</span>
               <h3 class="font-bold text-slate-900 text-sm">פיילוט שעות נשים/גברים והרחבת זמנים</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
-              מענה ישיר לדרישה שעלתה מ-25 משיבים ומעשרות תגובות פתוחות. הקצאת 2–3 חלונות זמן שבועיים ייעודיים לנשים בלבד (בדומה לטכניון), ופתיחה מוקדמת מ-06:30 ומאוחרת בסופ"ש.
+              מענה ישיר לדרישה החוזרת בעשרות משובים: הקצאת חלונות זמן שבועיים לנשים בלבד (בדומה לטכניון), לצד פתיחה מוקדמת מ-06:30 והרחבת שעות בסופי שבוע עבור מי שלומד ועובד במקביל.
             </p>
           </div>
-          <div class="text-[11px] font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg">
-            יעד: הצטרפות מיידית של עשרות סטודנטיות שנמנעו מלהגיע
+          <div class="text-[11px] font-bold text-amber-800 bg-amber-50/80 border border-amber-200/60 px-3 py-1.5 rounded-xl">
+            יעד מרכזי: הסרת החסם הדתי/אישי והצטרפות מיידית של עשרות מתאמנות חדשות.
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-indigo-300 transition">
+          <div class="absolute top-0 right-0 w-1.5 h-full bg-indigo-600"></div>
           <div>
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">3</span>
-              <h3 class="font-bold text-slate-900 text-sm">שדרוג מלתחות והוספת חוגים מבוקשים</h3>
+            <div class="flex items-center gap-3 mb-2.5">
+              <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-sm">3</span>
+              <h3 class="font-bold text-slate-900 text-sm">שדרוג מלתחות, ציוד והוספת פילאטיס/קרוספיט</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
-              הוספת פילאטיס מכשירים וקרוספיט (76 בחירות), חידוש משקולות קטלבל בחדר הכושר (78 בחירות), ושיפוץ תאי ההלבשה, הלוקרים והמקלחות (66 בחירות).
+              חידוש מתחם המשקולות והוספת משקולות קטלבל (פעמון) וגומיות, שיפוץ דחוף של המלתחות, הלוקרים והמקלחות (66 בחירות), והוספת חוגי פילאטיס מכשירים/אימוני כוח מבוקשים.
             </p>
           </div>
-          <div class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg">
-            יעד: הסרת חסמי הנוחות והתאמה ללו״ז שבין שיעורים
+          <div class="text-[11px] font-bold text-indigo-700 bg-indigo-50/80 border border-indigo-200/60 px-3 py-1.5 rounded-xl">
+            יעד מרכזי: פתרון תלונות הריח והניקיון והפיכת המקום לראוי ומזמין בין שיעורים.
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-emerald-300 transition">
+          <div class="absolute top-0 right-0 w-1.5 h-full bg-emerald-600"></div>
           <div>
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">4</span>
-              <h3 class="font-bold text-slate-900 text-sm">השקת קהילת ספורט ואירועי Wellness</h3>
+            <div class="flex items-center gap-3 mb-2.5">
+              <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center text-sm">4</span>
+              <h3 class="font-bold text-slate-900 text-sm">קהילת Wellness, שחרור מגרשים ואירועים</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
-              מינוף הצורך המוביל בהרצאות וסדנאות אורח חיים בריא (82 בחירות), הקמת מועדון ריצה סטודנטיאלי שבועי (63 בחירות), וטורנירים פקולטטיביים נושאי פרסים (66 בחירות).
+              הוצאה לפועל של הצורך המוביל בסדנאות תזונה ואורח חיים בריא (82 בחירות), פתיחת קבוצות ריצה שבועיות, והסדרת שעות מגרשי הטניס עבור סטודנטים במקום מאמנים פרטיים חיצוניים.
             </p>
           </div>
-          <div class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg">
-            יעד: בניית מותג אהוד ותחושת שייכות קהילתית בקמפוס
+          <div class="text-[11px] font-bold text-emerald-700 bg-emerald-50/80 border border-emerald-200/60 px-3 py-1.5 rounded-xl">
+            יעד מרכזי: בניית מותג מחובר לקהילה וסביבה חברתית ספורטיבית פעילה.
           </div>
         </div>
 
@@ -308,200 +472,14 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
-    דשבורד מבוסס על סקר מותג מרכז הספורט האוניברסיטאי • נערך בדצמבר 2024, שנת תשפ״ה • כל הנתונים מוצגים בעמוד אחד רציף.
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12 no-print">
+    דשבורד מנהלים מקצועי • מבוסס על סקר מותג מרכז הספורט האוניברסיטאי • נערך בדצמבר 2024, שנת תשפ״ה • כל הנתונים מבוססים על קובץ התגובות הרשמי (283 משיבים).
   </footer>
 
-  <!-- Chart.js and Data Scripts -->
-  <script>
-    Chart.defaults.font.family = "'Heebo', sans-serif";
-    Chart.defaults.color = "#475569";
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    // 1. Awareness Chart
-    new Chart(document.getElementById('awarenessChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['לא היו מודעים כלל', 'חברים ומכרים', 'אתר האוניברסיטה', 'פרסומות בקמפוס', 'רשתות חברתיות'],
-        datasets: [{
-          data: [166, 80, 17, 11, 9],
-          backgroundColor: ['#ef4444', '#4f46e5', '#06b6d4', '#8b5cf6', '#f59e0b'],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'bottom', rtl: true }
-        }
-      }
-    });
-
-    // 2. Drivers Chart
-    new Chart(document.getElementById('driversChart'), {
-      type: 'bar',
-      data: {
-        labels: [
-          'שיפור ציוד בחדר הכושר',
-          'הוספת חוגים (פילאטיס/קרוספיט)',
-          'שיפור מקלחות ולוקרים',
-          'הרחבת שעות פתיחה',
-          'אפליקציה ייעודית',
-          'שירותי בריאות (תזונה/פיזיו)',
-          'אירועים וטורנירים',
-          'הפרדת נשים וגברים',
-          'שיפור ניקיון ותחזוקה',
-          'נגישות למוגבלויות'
-        ],
-        datasets: [{
-          label: 'מספר בחירות',
-          data: [78, 76, 66, 65, 55, 41, 38, 25, 17, 8],
-          backgroundColor: '#4f46e5',
-          borderRadius: 6
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-          y: { grid: { display: false } }
-        }
-      }
-    });
-
-    // 3. Activities Chart
-    new Chart(document.getElementById('activitiesChart'), {
-      type: 'bar',
-      data: {
-        labels: ['סדנאות אורח חיים בריא', 'טורנירים ספורטיביים', 'פעילויות סוציאליות וריצה', 'ימי ספורט קבוצתיים'],
-        datasets: [{
-          label: 'מספר בחירות',
-          data: [82, 66, 63, 61],
-          backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ec4899'],
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-          x: { grid: { display: false } }
-        }
-      }
-    });
-
-    // 4. Brand Perception Chart
-    new Chart(document.getElementById('brandPerceptionChart'), {
-      type: 'bar',
-      data: {
-        labels: ['נגיש ונוח בקמפוס', 'שעות מוגבלות / חוסר חדשנות', 'מקום לבריאות ואיזון', 'מציע פעילויות מגוונות', 'ציוד מיושן / לא מספק', 'צפוף מדי בשיא'],
-        datasets: [{
-          label: 'מספר בחירות',
-          data: [20, 16, 15, 10, 7, 6],
-          backgroundColor: ['#10b981', '#ef4444', '#10b981', '#10b981', '#ef4444', '#ef4444'],
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-          x: { grid: { display: false } }
-        }
-      }
-    });
-
-    // 5. Usage Chart
-    new Chart(document.getElementById('usageChart'), {
-      type: 'pie',
-      data: {
-        labels: ['לא השתמשו באף שירות', 'חדר כושר', 'מגרשי ספורט', 'חוגים וסטודיו'],
-        datasets: [{
-          data: [114, 36, 16, 3],
-          backgroundColor: ['#cbd5e1', '#3b82f6', '#10b981', '#8b5cf6'],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'bottom', rtl: true }
-        }
-      }
-    });
-
-    // Quotes Data & Filtering
-    const quotes = [
-      { text: "הפרדה בין נשים לגברים בחדר כושר, זה יכול להיות חלוקת שעות. אם זה יהיה אני והחברות ממחר מצטרפות.", tag: "הפרדה" },
-      { text: "הפרדה בין נשים וגברים בחדר כושר", tag: "הפרדה" },
-      { text: "חייב ניקיון טוב יותר לחדר כושר ובבקשה תוסיפו עוד משקולות פעמון (בקושי יש)", tag: "ציוד" },
-      { text: "שיהיה בחדר הכושר שעות הפרדה בין נשים וגברים (בטכניון יש הפרדה וזה הולך טוב למה אצלנו לא???)", tag: "הפרדה" },
-      { text: "כאישה לא נוח לי להתאמן כשיש גברים בחדר כושר. תמצאו פתרון לזה בבקשה.", tag: "הפרדה" },
-      { text: "שירותי ייעוץ אישי – להציע שירותי ייעוץ אישי בתחום האימונים והכושר, כולל תוכניות מותאמות וייעוץ תזונתי.", tag: "חוגים" },
-      { text: "קבוצות לנשים בלבד - גברים בלבד", tag: "הפרדה" },
-      { text: "להוסיף ריקוד, יוגה, טאי צ'י, צ'י גונג", tag: "חוגים" },
-      { text: "תוסיפו שיעורי יוגה. וחוגי כושר בהפרדה לגברים ונשים", tag: "חוגים" },
-      { text: "שיהיה זמן רק לבנות, כי אני ועוד מלא בנות רוצות להתאמן בחדר הכושר וכל הזמן יש בנים וזה לא נוח…", tag: "הפרדה" },
-      { text: "להרחיב אותו יותר ולהוסיף הרבה מכשירים", tag: "ציוד" },
-      { text: "שיהיו פעילויות בחינם, פעילויות או הגרלות נושאות פרסים וכד'", tag: "חוגים" },
-      { text: "הרחבת שעות הפעילות גם לסופי שבוע ושעות הערב המאוחרות", tag: "ציוד" },
-      { text: "מלתחות נוחות יותר, לוקרים תקינים וסבון במקלחות", tag: "ציוד" },
-      { text: "הוספת פילאטיס מכשירים ומאמנים זמינים שיעזרו למי שמתחיל", tag: "חוגים" }
-    ];
-
-    let activeFilter = 'all';
-
-    function renderQuotes(list) {
-      const container = document.getElementById('quotesContainer');
-      if (list.length === 0) {
-        container.innerHTML = `<div class="col-span-3 text-center py-8 text-slate-400 text-xs">לא נמצאו משובים התואמים את החיפוש.</div>`;
-        return;
-      }
-      container.innerHTML = list.map(q => `
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-indigo-300 transition">
-          <p class="text-xs text-slate-700 italic leading-relaxed">"${q.text}"</p>
-          <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center text-[11px]">
-            <span class="px-2 py-0.5 rounded font-medium ${
-              q.tag === 'הפרדה' ? 'bg-rose-50 text-rose-600' :
-              q.tag === 'ציוד' ? 'bg-amber-50 text-amber-700' : 'bg-indigo-50 text-indigo-700'
-            }">${q.tag}</span>
-            <span class="text-slate-400">תשובה פתוחה (סקר תשפ״ה)</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function filterQuotes() {
-      const term = document.getElementById('commentSearch').value.trim().toLowerCase();
-      const filtered = quotes.filter(item => {
-        const matchesTerm = item.text.toLowerCase().includes(term);
-        const matchesFilter = activeFilter === 'all' || item.tag === activeFilter || item.text.includes(activeFilter);
-        return matchesTerm && matchesFilter;
-      });
-      renderQuotes(filtered);
-    }
-
-    function setFilter(tag) {
-      activeFilter = tag;
-      document.querySelectorAll('.quote-btn').forEach(btn => {
-        btn.className = 'quote-btn px-3 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg';
-      });
-      event.target.className = 'quote-btn px-3 py-1 bg-slate-900 text-white rounded-lg';
-      filterQuotes();
-    }
-
-    // Initial render
-    renderQuotes(quotes);
-  </script>
+  <!-- Connect Dedicated JS File -->
+  <script src="dashboard.js"></script>
 </body>
 </html>
