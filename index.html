@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מרכז הספורט של אוניברסיטת חיפה</title>
+  <title>סקר 2025 | מרכז הספורט של אוניברסיטת חיפה</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,12 +15,284 @@
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
+    :root {
+      color-scheme: light;
+      --dashboard-ink: #1E3445;
+      --dashboard-accent: #1EBAE6;
+      --dashboard-line: rgba(30, 52, 69, 0.14);
+    }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Heebo', sans-serif; }
+    main section[id], #survey-overview, #report-end { scroll-margin-top: 1.5rem; }
+    body.bg-slate-50 {
+      font-family: 'Heebo', sans-serif;
+      background-color: #FFFFFF;
+      background-image:
+        repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(30, 186, 230, 0.14) 31px, rgba(30, 186, 230, 0.14) 32px),
+        linear-gradient(to right, transparent 0, transparent 4.25rem, rgba(30, 186, 230, 0.2) 4.25rem, rgba(30, 186, 230, 0.2) 4.32rem, transparent 4.32rem),
+        radial-gradient(ellipse at 8% 8%, rgba(30, 186, 230, 0.045), transparent 27rem),
+        radial-gradient(ellipse at 95% 35%, rgba(30, 52, 69, 0.035), transparent 30rem);
+      background-attachment: fixed;
+    }
+    body.bg-slate-50 .survey-hero [class*="text-emerald-"],
+    body.bg-slate-50 .survey-hero [class*="text-teal-"] { color: #1EBAE6 !important; }
+    .survey-hero [class*="bg-emerald-"],
+    .survey-hero [class*="bg-teal-"] { background-color: rgba(30, 186, 230, 0.16) !important; }
+    body.bg-slate-50, body.bg-slate-50 * {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .survey-hero.survey-hero {
+      background-image:
+        radial-gradient(ellipse at 12% 85%, rgba(30, 186, 230, 0.24), transparent 26rem),
+        radial-gradient(ellipse at 90% 8%, rgba(30, 186, 230, 0.12), transparent 22rem),
+        linear-gradient(110deg, #1E3445 0%, #1E3445 66%, #152836 100%);
+      box-shadow: 0 28px 70px -32px rgba(30, 52, 69, 0.55);
+      animation: rise-in 650ms ease-out both;
+    }
+    .hero-orbit {
+      position: absolute;
+      z-index: 0;
+      top: 24%;
+      left: 30%;
+      width: 8rem;
+      height: 8rem;
+      pointer-events: none;
+      opacity: 0.24;
+      transform: translateY(-50%);
+      transform-style: preserve-3d;
+      perspective: 700px;
+    }
+    .hero-orbit-ring {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(125, 225, 255, 0.85);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(30, 186, 230, 0.16), inset 0 0 14px rgba(30, 186, 230, 0.12);
+      transform-style: preserve-3d;
+    }
+    .hero-orbit-ring:first-child {
+      animation: orbit-tilt 13s linear infinite;
+      transform: rotateX(68deg) rotateY(24deg);
+    }
+    .hero-orbit-ring:nth-child(2) {
+      inset: 0.75rem -0.75rem;
+      border-color: rgba(255, 255, 255, 0.75);
+      animation: orbit-counter 17s linear infinite;
+      transform: rotateX(55deg) rotateY(-38deg) rotateZ(35deg);
+    }
+    .hero-orbit-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 3.2rem;
+      height: 3.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, #fff 0, #7de1ff 18%, #1EBAE6 43%, #1E3445 78%);
+      box-shadow: 0 0 30px rgba(30, 186, 230, 0.6), inset -8px -8px 18px rgba(30, 52, 69, 0.55);
+      animation: core-float 4s ease-in-out infinite;
+      transform: translate3d(-50%, -50%, 28px);
+    }
+    .survey-hero > .relative { transform-style: preserve-3d; }
+    .survey-hero h2 { text-wrap: balance; letter-spacing: -0.035em; }
+    .survey-stat {
+      background: linear-gradient(145deg, rgba(30, 186, 230, 0.2), rgba(255, 255, 255, 0.055));
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
+      transform-style: preserve-3d;
+      transition: transform 220ms ease, background-color 180ms ease, box-shadow 220ms ease;
+    }
+    .survey-stat:hover { transform: translateY(-3px) translateZ(10px); background-color: rgba(255, 255, 255, 0.08); }
+    main section > div:first-child h2 { letter-spacing: -0.02em; }
+    .reading-guide {
+      border: 1px solid rgba(30, 52, 69, 0.12);
+      border-radius: 1.5rem;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 34px -26px rgba(30, 52, 69, 0.38);
+    }
+    .reading-step {
+      min-width: 0;
+      border: 1px solid rgba(30, 52, 69, 0.12);
+      border-radius: 1rem;
+      background: linear-gradient(145deg, #fff, #f7fcfe);
+      transform-style: preserve-3d;
+      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+    .reading-step:hover, .reading-step:focus-visible {
+      border-color: rgba(30, 186, 230, 0.7);
+      box-shadow: 0 10px 24px -18px rgba(30, 52, 69, 0.5);
+      transform: perspective(800px) rotateX(3deg) rotateY(-2deg) translateY(-3px) translateZ(7px);
+    }
+    .reading-step:focus-visible, .section-transition a:focus-visible, .report-return:focus-visible {
+      outline: 3px solid rgba(30, 186, 230, 0.6);
+      outline-offset: 3px;
+    }
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.45rem;
+      color: #1E3445;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .step-label span {
+      display: inline-grid;
+      width: 1.45rem;
+      height: 1.45rem;
+      place-items: center;
+      border-radius: 9999px;
+      background: #1EBAE6;
+      color: #1E3445;
+      font-size: 0.65rem;
+    }
+    .section-transition {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.15rem 0;
+      color: #64748b;
+      font-size: 0.75rem;
+    }
+    .section-transition::before {
+      width: 2rem;
+      height: 1px;
+      flex: 0 0 auto;
+      background: rgba(30, 186, 230, 0.7);
+      content: "";
+    }
+    .section-transition a {
+      color: #1E3445;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: rgba(30, 186, 230, 0.7);
+      text-underline-offset: 3px;
+    }
+    .report-end {
+      border: 1px solid rgba(30, 186, 230, 0.28);
+      border-radius: 1.5rem;
+      background: linear-gradient(110deg, #fff, #e8f8fc);
+    }
+    #kpi-section .grid > div,
+    #demographics-section .grid > div,
+    #charts-awareness .grid > div,
+    #charts-drivers .grid > div,
+    #charts-perception .grid > div,
+    #action-plan .timeline-card {
+      border-color: var(--dashboard-line);
+      box-shadow: 0 8px 28px -18px rgba(15, 23, 42, 0.34), 0 1px 2px rgba(15, 23, 42, 0.04);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    #demographics-section .grid > div,
+    #charts-awareness .grid > div,
+    #charts-drivers .grid > div,
+    #charts-perception .grid > div {
+      background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(249, 252, 251, 0.96));
+    }
+    #kpi-section .grid,
+    #demographics-section .grid,
+    #charts-awareness .grid,
+    #charts-drivers .grid,
+    #charts-perception .grid,
+    #action-plan .timeline-list { perspective: 1200px; }
+    #kpi-section .grid > div,
+    #demographics-section .grid > div,
+    #charts-awareness .grid > div,
+    #charts-drivers .grid > div,
+    #charts-perception .grid > div,
+    #action-plan .timeline-card { transform-style: preserve-3d; }
+    #demographics-section .grid > div:hover,
+    #charts-awareness .grid > div:hover,
+    #charts-drivers .grid > div:hover,
+    #charts-perception .grid > div:hover,
+    #action-plan .timeline-item:hover .timeline-card {
+      transform: rotateX(1.5deg) rotateY(-1.5deg) translateY(-3px) translateZ(5px);
+      box-shadow: 0 18px 36px -22px rgba(15, 23, 42, 0.4);
+    }
+    #action-plan .timeline-list {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    #action-plan .timeline-list::before {
+      position: absolute;
+      top: 1.5rem;
+      bottom: 1.5rem;
+      right: 1.2rem;
+      border-right: 2px dashed rgba(30, 186, 230, 0.55);
+      content: "";
+    }
+    #action-plan .timeline-item {
+      position: relative;
+      min-width: 0;
+      padding-right: 3.5rem;
+    }
+    #action-plan .timeline-marker {
+      position: absolute;
+      z-index: 1;
+      top: 1.35rem;
+      right: 0;
+      width: 2.6rem;
+      height: 2.6rem;
+      border: 4px solid #FFFFFF;
+      border-radius: 9999px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+    }
+    #action-plan .timeline-card { border-radius: 1.25rem; }
+    #action-plan .timeline-card h3 { line-height: 1.55; }
+    footer { background-color: #FFFFFF; background-image: linear-gradient(110deg, #FFFFFF, #E8F8FC); }
+    .timeline-marker { background-color: #1EBAE6 !important; color: #1E3445 !important; }
+    #action-plan .timeline-item:nth-child(even) .timeline-marker {
+      background-color: #1E3445 !important;
+      color: #FFFFFF !important;
+    }
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes orbit-tilt {
+      from { transform: rotateX(68deg) rotateY(24deg) rotateZ(0deg); }
+      to { transform: rotateX(68deg) rotateY(24deg) rotateZ(360deg); }
+    }
+    @keyframes orbit-counter {
+      from { transform: rotateX(55deg) rotateY(-38deg) rotateZ(35deg); }
+      to { transform: rotateX(55deg) rotateY(-38deg) rotateZ(-325deg); }
+    }
+    @keyframes core-float {
+      0%, 100% { transform: translate3d(-50%, -50%, 22px); }
+      50% { transform: translate3d(-50%, -50%, 38px); }
+    }
+    @media (min-width: 768px) {
+      .hero-orbit { display: block; }
+    }
+    @media (max-width: 767px) {
+      .hero-orbit { display: none; }
+    }
+    @media (hover: none) {
+      .survey-stat:hover { transform: none; }
+      .reading-step:hover, #demographics-section .grid > div:hover,
+      #charts-awareness .grid > div:hover, #charts-drivers .grid > div:hover,
+      #charts-perception .grid > div:hover,
+      #action-plan .timeline-item:hover .timeline-card { transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
     @media print {
       .no-print { display: none !important; }
-      body { background: white !important; color: black !important; }
+      body.bg-slate-50 { background: white !important; color: black !important; }
       .break-inside-avoid { break-inside: avoid; }
+      .survey-hero, #kpi-section .grid > div, #demographics-section .grid > div,
+      #charts-awareness .grid > div, #charts-drivers .grid > div,
+      #charts-perception .grid > div, #action-plan .timeline-card { box-shadow: none !important; }
+        .reading-guide, .reading-step, .report-end { box-shadow: none !important; }
+      .hero-orbit { display: none !important; }
     }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -28,72 +300,84 @@
     mark { background-color: #fef08a; padding: 0 2px; border-radius: 2px; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen selection:bg-indigo-600 selection:text-white">
-
-  <!-- Scroll Progress Indicator -->
-  <div id="scrollProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 z-50 transition-all duration-150" style="width: 0%"></div>
-
-  <!-- Header -->
-  <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-lg border-b border-slate-800 backdrop-blur-md bg-slate-900/95">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="py-3 flex flex-wrap justify-between items-center gap-4">
-        
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg border border-indigo-400/30 transform hover:rotate-6 transition">
-            🏋️‍♂️
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-lg sm:text-xl font-black tracking-tight">מרכז הספורט של אוניברסיטת חיפה</h1>
-              <span class="bg-indigo-500/20 text-indigo-300 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-indigo-400/30">תשפ״ה • 2024/25</span>
-            </div>
-            <p class="text-xs text-slate-400">ממצאי סקר מותג, ערוצי שיווק ומשובי סטודנטים</p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 sm:gap-3 text-xs">
-          <div class="hidden sm:flex bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/80 items-center gap-2 text-slate-300">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>מדגם: <strong>283 משתתפים</strong> (דצמבר 2024)</span>
-          </div>
-
-          <button id="exportCsvBtn" class="no-print bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95">
-            <span>📥</span>
-            <span class="hidden md:inline">ייצוא משובים ל-CSV</span>
-          </button>
-
-          <button onclick="window.print()" class="no-print bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-xl transition shadow flex items-center gap-1.5 active:scale-95">
-            <span>🖨️</span>
-            <span>הדפסה / PDF</span>
-          </button>
-        </div>
-
-      </div>
-
-      <!-- Navigation Tabs -->
-      <nav id="navTabs" class="flex border-t border-slate-800 py-2 overflow-x-auto gap-4 sm:gap-6 text-xs font-medium text-slate-400 custom-scrollbar no-print">
-        <a href="#kpi-section" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מדדי מפתח</a>
-        <a href="#demographics-section" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">פילוח דמוגרפי</a>
-        <a href="#charts-awareness" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מודעות וחשיפה</a>
-        <a href="#charts-drivers" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">מניעי הגעה ופעילויות</a>
-        <a href="#charts-perception" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">תפיסת מותג ושימוש</a>
-        <a href="#student-voices" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">קולות השטח (משובים)</a>
-        <a href="#action-plan" class="nav-link hover:text-white transition whitespace-nowrap py-0.5 border-b-2 border-transparent">תוכנית עבודה</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen selection:bg-emerald-600 selection:text-white">
 
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
+    <!-- Survey Overview -->
+    <section id="survey-overview" aria-labelledby="survey-overview-title" class="survey-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-l from-slate-950 via-teal-950 to-emerald-900 p-6 text-white shadow-xl sm:p-8 lg:p-10">
+      <div aria-hidden="true" class="absolute -left-16 -top-24 -z-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl"></div>
+      <div aria-hidden="true" class="absolute -bottom-32 right-1/3 -z-10 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      <div class="hero-orbit" aria-hidden="true">
+        <span class="hero-orbit-ring"></span>
+        <span class="hero-orbit-ring"></span>
+        <span class="hero-orbit-core"></span>
+      </div>
+      <div class="relative z-10 grid items-center gap-8 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-100">
+            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+            תחילת הסקירה • דוח סקר שנתי 2025
+          </span>
+          <h2 id="survey-overview-title" class="mt-4 text-2xl font-black leading-tight sm:text-3xl lg:text-4xl">בין מודעות לפעילות:<br class="hidden sm:block"> תמונת מצב מרכז הספורט</h2>
+          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-200 sm:text-base">
+            הסקירה עוברת מתמונת המשיבים, דרך פערי המודעות והצרכים, ועד להצעות פעולה המבוססות על הממצאים.
+          </p>
+          <div class="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-slate-100">
+            <span aria-hidden="true">📊</span>
+            <span><strong class="font-extrabold text-white">283</strong> משתתפים בסקר</span>
+          </div>
+          <div class="mt-4 max-w-xl rounded-2xl border border-emerald-200/20 bg-slate-950/30 p-4 text-sm leading-relaxed text-slate-200 backdrop-blur-sm">
+            <div class="mb-1 flex items-center gap-2 font-bold text-emerald-200">
+              <span aria-hidden="true">🎓</span>
+              <span>פרויקט סטודנטים</span>
+            </div>
+            <p>
+              הסקר נערך על ידי <strong class="text-white">עבד, אליאס ודיינה</strong>
+              במסגרת הקורס <strong class="text-white">״מבוא לתקשורת שיווקית״</strong>,
+              באמצעות <strong class="text-white">Google Forms</strong>.
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div class="survey-stat rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+            <div class="text-2xl font-black text-emerald-300 sm:text-3xl">58.7%</div>
+            <p class="mt-1 text-xs leading-relaxed text-slate-200">מהמשיבים לא היו מודעים לקיום המרכז</p>
+          </div>
+          <div class="survey-stat rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+            <div class="text-2xl font-black text-cyan-300 sm:text-3xl">13.8%</div>
+            <p class="mt-1 text-xs leading-relaxed text-slate-200">מהמשיבים משתמשים במתקני המרכז</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav aria-labelledby="reading-guide-title" class="reading-guide -mt-4 p-5 sm:p-6">
+      <div class="mb-4">
+        <p class="step-label"><span>↘</span> המסלול בסקירה</p>
+        <h2 id="reading-guide-title" class="text-base font-black text-slate-900 sm:text-lg">מתחילים בתמונה הרחבה ומסיימים במה כדאי לעשות</h2>
+        <p class="mt-1 text-xs leading-relaxed text-slate-600">כל תחנה עונה על שאלה שמובילה לבאה אחריה. אפשר לבחור תחנה, או להתקדם לפי הסדר.</p>
+      </div>
+      <ol class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#kpi-section"><span class="step-label mb-0 shrink-0"><span>01</span></span><span><strong class="block text-xs font-extrabold text-slate-800">תמונת מצב</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מהם הנתונים הבולטים בסקר?</span></span></a></li>
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#demographics-section"><span class="step-label mb-0 shrink-0"><span>02</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מי השתתף?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מי קהל המשיבים ומה מאפיין אותו?</span></span></a></li>
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-awareness"><span class="step-label mb-0 shrink-0"><span>03</span></span><span><strong class="block text-xs font-extrabold text-slate-800">האם מכירים את המרכז?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מהם פערי המודעות ואיך נחשפים?</span></span></a></li>
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-drivers"><span class="step-label mb-0 shrink-0"><span>04</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה יגרום לסטודנטים להגיע?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">אילו שיפורים ופעילויות מבוקשים?</span></span></a></li>
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-perception"><span class="step-label mb-0 shrink-0"><span>05</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה חושבים ומה קורה בפועל?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">איך תופסים את המרכז וכמה משתמשים בו?</span></span></a></li>
+        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#action-plan"><span class="step-label mb-0 shrink-0"><span>06</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה עושים מכאן?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">ממצאים הופכים לתוכנית פעולה.</span></span></a></li>
+      </ol>
+    </nav>
+
     <!-- KPI Section with Animated Counters -->
     <section id="kpi-section" class="space-y-4">
-      <div class="flex items-center justify-between border-r-4 border-indigo-600 pr-3">
+      <div class="flex items-center justify-between border-r-4 border-emerald-500 pr-3">
         <div>
+          <span class="step-label"><span>01</span> תחנה ראשונה • התמונה הרחבה</span>
           <h2 class="text-lg font-black text-slate-900">תמונת מצב מנהלים</h2>
-          <p class="text-xs text-slate-500">תמונת מאקרו מתוך 283 משיבים בסקר תשפ״ה</p>
+          <p class="text-xs text-slate-500">תמונת מאקרו מתוך 283 משיבים בסקר 2025</p>
         </div>
-        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-100">
+        <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100">
           N = 283
         </span>
       </div>
@@ -129,19 +413,19 @@
         </div>
 
         <!-- KPI 3 -->
-        <div class="bg-gradient-to-br from-indigo-50/60 to-white p-5 rounded-2xl border border-indigo-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
+        <div class="bg-gradient-to-br from-teal-50/60 to-white p-5 rounded-2xl border border-teal-200 shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-0.5 transition duration-200">
           <div class="flex justify-between items-start">
-            <span class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">הצורך המוביל במתקנים</span>
+            <span class="text-[11px] font-bold text-teal-700 uppercase tracking-wider">הצורך המוביל במתקנים</span>
             <span class="text-2xl opacity-40 group-hover:scale-110 transition">🏋️</span>
           </div>
-          <div class="text-3xl font-black text-indigo-700 mt-2 font-mono">
+          <div class="text-3xl font-black text-teal-700 mt-2 font-mono">
             <span data-counter="78">0</span> / <span data-counter="76">0</span>
           </div>
-          <div class="mt-2 text-xs text-indigo-900 flex items-center justify-between">
+          <div class="mt-2 text-xs text-teal-900 flex items-center justify-between">
             <span>מכשור מתקדם & חוגים</span>
-            <span class="font-bold text-indigo-600">54.4%</span>
+            <span class="font-bold text-teal-700">54.4%</span>
           </div>
-          <p class="text-[11px] text-indigo-600/80 mt-0.5">דרישה לפילאטיס מכשירים וקרוספיט</p>
+          <p class="text-[11px] text-teal-700 mt-0.5">דרישה לפילאטיס מכשירים וקרוספיט</p>
         </div>
 
         <!-- KPI 4 -->
@@ -161,9 +445,12 @@
       </div>
     </section>
 
+    <div class="section-transition"><span>מכאן בודקים</span><a href="#demographics-section">מי השיב על הסקר ←</a></div>
+
     <!-- Demographics Section -->
     <section id="demographics-section" class="space-y-4">
       <div class="border-r-4 border-slate-700 pr-3">
+        <span class="step-label"><span>02</span> תחנה שנייה • מי ענה?</span>
         <h2 class="text-lg font-black text-slate-900">פילוח דמוגרפי של קהל היעד</h2>
         <p class="text-xs text-slate-500">התפלגות המשיבים לפי שנת לימוד, גיל ותחומי התמחות מובילים בקמפוס</p>
       </div>
@@ -174,7 +461,7 @@
           <div>
             <div class="flex justify-between items-center mb-2">
               <h3 class="font-bold text-sm text-slate-800">התפלגות לפי שנת לימוד</h3>
-              <span class="text-[11px] text-indigo-600 font-semibold">רוב מובהק לשנה א'-ב'</span>
+              <span class="text-[11px] text-emerald-700 font-semibold">רוב מובהק לשנה א'-ב'</span>
             </div>
             <div class="relative h-48">
               <canvas id="yearsChart"></canvas>
@@ -190,7 +477,7 @@
           <div>
             <div class="flex justify-between items-center mb-2">
               <h3 class="font-bold text-sm text-slate-800">התפלגות קבוצות גיל</h3>
-              <span class="text-[11px] text-indigo-600 font-semibold">קהל צעיר 18–24</span>
+              <span class="text-[11px] text-emerald-700 font-semibold">קהל צעיר 18–24</span>
             </div>
             <div class="relative h-48">
               <canvas id="ageChart"></canvas>
@@ -209,19 +496,19 @@
             <div class="space-y-2 text-xs">
               <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
                 <span class="font-medium text-slate-700">ריפוי בעיסוק & פיזיותרפיה</span>
-                <span class="font-bold text-indigo-600">31 משיבים</span>
+                <span class="font-bold text-emerald-700">31 משיבים</span>
               </div>
               <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
                 <span class="font-medium text-slate-700">מערכות מידע & מדעי המחשב</span>
-                <span class="font-bold text-indigo-600">29 משיבים</span>
+                <span class="font-bold text-emerald-700">29 משיבים</span>
               </div>
               <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
                 <span class="font-medium text-slate-700">תקשורת & שירותי אנוש</span>
-                <span class="font-bold text-indigo-600">24 משיבים</span>
+                <span class="font-bold text-emerald-700">24 משיבים</span>
               </div>
               <div class="flex justify-between items-center bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
                 <span class="font-medium text-slate-700">כלכלה & משפטים</span>
-                <span class="font-bold text-indigo-600">23 משיבים</span>
+                <span class="font-bold text-emerald-700">23 משיבים</span>
               </div>
             </div>
           </div>
@@ -231,9 +518,12 @@
       </div>
     </section>
 
+    <div class="section-transition"><span>אחרי שמכירים את הקהל, שואלים</span><a href="#charts-awareness">האם הוא מכיר את המרכז ←</a></div>
+
     <!-- Awareness Section -->
     <section id="charts-awareness" class="space-y-4">
       <div class="border-r-4 border-rose-500 pr-3">
+        <span class="step-label"><span>03</span> תחנה שלישית • פער המודעות</span>
         <h2 class="text-lg font-black text-slate-900">מודעות למרכז ואפקטיביות ערוצי השיווק</h2>
         <p class="text-xs text-slate-500">ניתוח פערי השיווק מול ערוצי המידע הפעילים בקמפוס</p>
       </div>
@@ -263,8 +553,8 @@
             </p>
           </div>
 
-          <div class="p-4 bg-indigo-50/70 rounded-xl border border-indigo-200">
-            <div class="flex items-center gap-2 font-bold text-indigo-900 text-sm mb-1">
+          <div class="p-4 bg-teal-50/70 rounded-xl border border-teal-200">
+            <div class="flex items-center gap-2 font-bold text-teal-900 text-sm mb-1">
               <span>🗣️</span>
               <span>"מפה לאוזן" כעוגן עיקרי</span>
             </div>
@@ -277,9 +567,12 @@
       </div>
     </section>
 
+    <div class="section-transition"><span>כעת עוברים מהבעיה לפתרונות</span><a href="#charts-drivers">מה יעודד שימוש ←</a></div>
+
     <!-- Drivers & Activities Section -->
     <section id="charts-drivers" class="space-y-4">
-      <div class="border-r-4 border-indigo-600 pr-3">
+      <div class="border-r-4 border-emerald-500 pr-3">
+        <span class="step-label"><span>04</span> תחנה רביעית • צרכים והעדפות</span>
         <h2 class="text-lg font-black text-slate-900">גורמים מעודדי שימוש ופעילויות מבוקשות</h2>
         <p class="text-xs text-slate-500">מה נדרש כדי להגביר את נוכחות הסטודנטים במתקנים</p>
       </div>
@@ -311,9 +604,12 @@
       </div>
     </section>
 
+    <div class="section-transition"><span>הצרכים מקבלים הקשר דרך</span><a href="#charts-perception">התפיסה והשימוש בפועל ←</a></div>
+
     <!-- Perception & Usage Funnel -->
     <section id="charts-perception" class="space-y-4">
       <div class="border-r-4 border-emerald-600 pr-3">
+        <span class="step-label"><span>05</span> תחנה חמישית • מהתפיסה להתנהגות</span>
         <h2 class="text-lg font-black text-slate-900">תפיסת המותג ומשפך השימוש בפועל</h2>
         <p class="text-xs text-slate-500">כיצד נתפס המרכז בעיני המשתמשים מול נתוני ההמרה בפועל</p>
       </div>
@@ -351,62 +647,24 @@
       </div>
     </section>
 
-    <!-- Student Open Voices (Interactive) -->
-    <section id="student-voices" class="space-y-4">
-      <div class="border-r-4 border-amber-500 pr-3 flex flex-col md:flex-row justify-between md:items-center gap-3">
-        <div>
-          <div class="flex items-center gap-2">
-            <h2 class="text-lg font-black text-slate-900">קולות השטח: הצעות ורעיונות הסטודנטים</h2>
-            <span id="quotesCountBadge" class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-all">
-              טוען משובים...
-            </span>
-          </div>
-          <p class="text-xs text-slate-500">כלל התגובות הפתוחות שנאספו בסקר תשפ״ה, מסווגות ומאפשרות חיפוש מהיר</p>
-        </div>
-
-        <!-- Search Bar with Reset Icon -->
-        <div class="w-full md:w-72 no-print relative">
-          <input 
-            type="text" 
-            id="commentSearch" 
-            placeholder="חיפוש חופשי (הפרדה, מחיר, טניס, מקלחות...)" 
-            class="w-full pl-8 pr-8 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none shadow-sm transition"
-          >
-          <span class="absolute right-2.5 top-2.5 text-xs text-slate-400">🔍</span>
-          <button id="clearSearchBtn" class="hidden absolute left-2.5 top-2 text-xs text-slate-400 hover:text-slate-600 bg-slate-100 rounded-full w-4 h-4 flex items-center justify-center">✕</button>
-        </div>
-      </div>
-
-      <!-- Filter Buttons -->
-      <div class="flex flex-wrap gap-2 text-xs no-print items-center">
-        <span class="text-slate-400 text-xs font-semibold ml-1">סינון לפי נושא:</span>
-        <button data-filter="all" class="filter-btn active-filter px-3 py-1.5 bg-slate-900 text-white font-medium rounded-xl shadow-sm transition">הכל (<span id="allCount">40</span>)</button>
-        <button data-filter="הפרדה ושעות נשים" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">הפרדה מגדרית ושעות נשים</button>
-        <button data-filter="מתקנים ותחזוקה" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">ציוד, שיפוץ וניקיון</button>
-        <button data-filter="חוגים ובריאות" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">חוגים, יוגה ובריאות</button>
-        <button data-filter="שירות, קהילה ומחיר" class="filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium rounded-xl transition">מחירים, מגרשים ושירות</button>
-      </div>
-
-      <!-- Quotes Cards Grid -->
-      <div id="quotesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Injected via dashboard.js -->
-      </div>
-    </section>
+    <div class="section-transition"><span>אחרי שחיברנו בין הממצאים, מסכמים</span><a href="#action-plan">מה כדאי לעשות ←</a></div>
 
     <!-- Operational Roadmap -->
     <section id="action-plan" class="space-y-4 break-inside-avoid">
-      <div class="border-r-4 border-indigo-700 pr-3">
-        <h2 class="text-lg font-black text-slate-900">תוכנית עבודה אופרטיבית להנהלה (שנת תשפ״ה)</h2>
-        <p class="text-xs text-slate-500">4 עוגנים למינוף הפוטנציאל הלא-מנוצל והפיכת המרכז למוקד תוסס ורווחי</p>
+      <div class="border-r-4 border-emerald-700 pr-3">
+        <span class="step-label"><span>06</span> תחנה שישית • מסקנות ופעולה</span>
+        <h2 class="text-lg font-black text-slate-900">תוכנית עבודה אופרטיבית להנהלה לשנת 2025</h2>
+        <p class="text-xs text-slate-500">ארבעה שלבים לפי סדר יישום: חשיפה, נגישות, שדרוג מתקנים ובניית קהילה</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ol class="timeline-list list-none p-0 m-0">
         
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-rose-300 transition">
+        <li class="timeline-item">
+          <span aria-label="שלב 1 מתוך 4" class="timeline-marker bg-rose-500 text-white font-black flex items-center justify-center text-xs">01</span>
+          <div class="timeline-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-rose-300 transition">
           <div class="absolute top-0 right-0 w-1.5 h-full bg-rose-500"></div>
           <div>
             <div class="flex items-center gap-3 mb-2.5">
-              <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 font-black flex items-center justify-center text-sm">1</span>
               <h3 class="font-bold text-slate-900 text-sm">קמפיין שיווק ומודעות דיגיטלי (Digital Awareness)</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
@@ -416,13 +674,15 @@
           <div class="text-[11px] font-bold text-rose-700 bg-rose-50/80 border border-rose-200/60 px-3 py-1.5 rounded-xl">
             יעד מרכזי: הורדת שיעור חוסר המודעות אל מתחת ל-20% תוך סמסטר אחד.
           </div>
-        </div>
+          </div>
+        </li>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-amber-300 transition">
+        <li class="timeline-item">
+          <span aria-label="שלב 2 מתוך 4" class="timeline-marker bg-amber-500 text-white font-black flex items-center justify-center text-xs">02</span>
+          <div class="timeline-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-amber-300 transition">
           <div class="absolute top-0 right-0 w-1.5 h-full bg-amber-500"></div>
           <div>
             <div class="flex items-center gap-3 mb-2.5">
-              <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 font-black flex items-center justify-center text-sm">2</span>
               <h3 class="font-bold text-slate-900 text-sm">פיילוט שעות נשים/גברים והרחבת זמנים</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
@@ -432,29 +692,33 @@
           <div class="text-[11px] font-bold text-amber-800 bg-amber-50/80 border border-amber-200/60 px-3 py-1.5 rounded-xl">
             יעד מרכזי: הסרת החסם הדתי/אישי והצטרפות מיידית של עשרות מתאמנות חדשות.
           </div>
-        </div>
+          </div>
+        </li>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-indigo-300 transition">
-          <div class="absolute top-0 right-0 w-1.5 h-full bg-indigo-600"></div>
+        <li class="timeline-item">
+          <span aria-label="שלב 3 מתוך 4" class="timeline-marker bg-teal-600 text-white font-black flex items-center justify-center text-xs">03</span>
+          <div class="timeline-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-teal-300 transition">
+          <div class="absolute top-0 right-0 w-1.5 h-full bg-teal-600"></div>
           <div>
             <div class="flex items-center gap-3 mb-2.5">
-              <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-sm">3</span>
               <h3 class="font-bold text-slate-900 text-sm">שדרוג מלתחות, ציוד והוספת פילאטיס/קרוספיט</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
               חידוש מתחם המשקולות והוספת משקולות קטלבל (פעמון) וגומיות, שיפוץ דחוף של המלתחות, הלוקרים והמקלחות (66 בחירות), והוספת חוגי פילאטיס מכשירים/אימוני כוח מבוקשים.
             </p>
           </div>
-          <div class="text-[11px] font-bold text-indigo-700 bg-indigo-50/80 border border-indigo-200/60 px-3 py-1.5 rounded-xl">
+          <div class="text-[11px] font-bold text-teal-800 bg-teal-50/80 border border-teal-200/60 px-3 py-1.5 rounded-xl">
             יעד מרכזי: פתרון תלונות הריח והניקיון והפיכת המקום לראוי ומזמין בין שיעורים.
           </div>
-        </div>
+          </div>
+        </li>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-emerald-300 transition">
+        <li class="timeline-item">
+          <span aria-label="שלב 4 מתוך 4" class="timeline-marker bg-emerald-600 text-white font-black flex items-center justify-center text-xs">04</span>
+          <div class="timeline-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-emerald-300 transition">
           <div class="absolute top-0 right-0 w-1.5 h-full bg-emerald-600"></div>
           <div>
             <div class="flex items-center gap-3 mb-2.5">
-              <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center text-sm">4</span>
               <h3 class="font-bold text-slate-900 text-sm">קהילת Wellness, שחרור מגרשים ואירועים</h3>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-3">
@@ -464,20 +728,27 @@
           <div class="text-[11px] font-bold text-emerald-700 bg-emerald-50/80 border border-emerald-200/60 px-3 py-1.5 rounded-xl">
             יעד מרכזי: בניית מותג מחובר לקהילה וסביבה חברתית ספורטיבית פעילה.
           </div>
-        </div>
+          </div>
+        </li>
 
+      </ol>
+    </section>
+
+    <section id="report-end" aria-labelledby="report-end-title" class="report-end flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div>
+        <p class="step-label"><span>✓</span> סוף הסקירה</p>
+        <h2 id="report-end-title" class="text-base font-black text-slate-900">מהתמונה הראשונית לתוכנית פעולה</h2>
+        <p class="mt-1 text-xs leading-relaxed text-slate-600">עברנו על קהל המשיבים, המודעות, הצרכים והשימוש בפועל — וכעת אפשר לראות כיצד הממצאים מתחברים להמלצות.</p>
       </div>
+      <a class="report-return inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:border-sky-400 hover:text-slate-900" href="#survey-overview">חזרה לתחילת הסקירה ↑</a>
     </section>
 
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12 no-print">
-    דשבורד מנהלים מקצועי • מבוסס על סקר מותג מרכז הספורט האוניברסיטאי • נערך בדצמבר 2024, שנת תשפ״ה • כל הנתונים מבוססים על קובץ התגובות הרשמי (283 משיבים).
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-6 no-print">
+    פרויקט סטודנטים של עבד, אליאס ודיינה בקורס ״מבוא לתקשורת שיווקית״ • הסקר נערך באמצעות Google Forms בשנת 2025 • 283 משיבים.
   </footer>
-
-  <!-- Toast Notification Container -->
-  <div id="toastContainer" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- Connect Dedicated JS File -->
   <script src="dashboard.js"></script>
