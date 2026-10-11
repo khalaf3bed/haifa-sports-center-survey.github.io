@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initCounters();
   initCharts();
+  initPageMotion();
   preventTextCopy();
 });
 
@@ -25,31 +26,180 @@ function preventTextCopy() {
 // 1. אנימציית מוני מספרים (KPI Counters)
 // ==========================================
 function initCounters() {
+  prepareTextCounters();
+
   const counterElements = document.querySelectorAll('[data-counter]');
-  
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+    counterElements.forEach(setCounterTarget);
+    return;
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      animateCounter(entry.target);
+    });
+  }, { threshold: 0.2 });
+
   counterElements.forEach(el => {
-    const target = parseFloat(el.getAttribute('data-counter'));
-    const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
-    const duration = 1200; // ms
-    const startTime = performance.now();
+    observer.observe(el);
+  });
+}
 
-    function updateCounter(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const currentVal = easedProgress * target;
+function prepareTextCounters() {
+  const main = document.querySelector('main');
+  if (!main) return;
 
-      el.textContent = decimals > 0 ? currentVal.toFixed(decimals) : Math.floor(currentVal);
+  const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || !/\d/.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+      return parent.closest('nav, .step-label, .timeline-marker, [data-counter], canvas, script, style')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
 
-      if (progress < 1) {
-        requestAnimationFrame(updateCounter);
-      } else {
-        el.textContent = decimals > 0 ? target.toFixed(decimals) : target;
-      }
+  textNodes.forEach(node => {
+    const text = node.nodeValue;
+    const numberPattern = /\d+(?:\.\d+)?/g;
+    const timeRanges = Array.from(text.matchAll(/\d{1,2}:\d{2}/g), time => ({
+      start: time.index,
+      end: time.index + time[0].length
+    }));
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+    let match;
+    let hasCounter = false;
+
+    while ((match = numberPattern.exec(text))) {
+      const value = Number(match[0]);
+      const isTime = timeRanges.some(time => match.index >= time.start && numberPattern.lastIndex <= time.end);
+      if (isTime || (value >= 1900 && value <= 2099)) continue;
+
+      fragment.append(document.createTextNode(text.slice(lastIndex, match.index)));
+      const counter = document.createElement('span');
+      counter.className = 'count-up';
+      counter.setAttribute('data-counter', match[0]);
+      counter.setAttribute('data-decimals', (match[0].split('.')[1] || '').length);
+      counter.textContent = match[0];
+      fragment.append(counter);
+      lastIndex = numberPattern.lastIndex;
+      hasCounter = true;
     }
 
-    requestAnimationFrame(updateCounter);
+    if (hasCounter) {
+      fragment.append(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(fragment, node);
+    }
+  });
+
+  main.querySelectorAll('[data-counter]').forEach(el => el.classList.add('count-up'));
+}
+
+function setCounterTarget(el) {
+  const target = Number(el.getAttribute('data-counter'));
+  const decimals = Number(el.getAttribute('data-decimals') || 0);
+  if (!Number.isFinite(target)) return;
+  el.textContent = decimals > 0 ? target.toFixed(decimals) : String(target);
+}
+
+function animateCounter(el) {
+  const target = Number(el.getAttribute('data-counter'));
+  const decimals = Number(el.getAttribute('data-decimals') || 0);
+  if (!Number.isFinite(target)) return;
+
+  const duration = 1000;
+  const startTime = performance.now();
+
+  function updateCounter(currentTime) {
+    const progress = Math.min((currentTime - startTime) / duration, 1);
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    const currentValue = easedProgress * target;
+    el.textContent = decimals > 0
+      ? currentValue.toFixed(decimals)
+      : String(Math.floor(currentValue));
+
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter);
+    } else {
+      setCounterTarget(el);
+    }
+  }
+
+  requestAnimationFrame(updateCounter);
+}
+
+function initPageMotion() {
+  initStationProgress();
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const revealElements = [
+    ...main.querySelectorAll('#survey-overview > div > div'),
+    ...main.querySelectorAll('.station-timeline li'),
+    ...main.querySelectorAll('main > section[id]:not(#survey-overview) > div:first-child'),
+    ...main.querySelectorAll('main > section[id] > .grid > div'),
+    ...main.querySelectorAll('#action-plan .timeline-item'),
+    ...main.querySelectorAll('#report-end > div, #report-end > a')
+  ];
+  const uniqueRevealElements = [...new Set(revealElements)];
+
+  uniqueRevealElements.forEach((element, index) => {
+    element.setAttribute('data-reveal', '');
+    element.style.setProperty('--reveal-delay', `${(index % 4) * 85}ms`);
+  });
+
+  document.body.classList.add('motion-ready');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      observer.unobserve(entry.target);
+
+      entry.target.querySelectorAll('canvas').forEach(canvas => {
+        const chart = Chart.getChart(canvas);
+        if (!chart) return;
+        chart.reset();
+        chart.update();
+      });
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
+
+  uniqueRevealElements.forEach(element => observer.observe(element));
+}
+
+function initStationProgress() {
+  const stationLinks = document.querySelectorAll('.station-timeline a[href^="#"]');
+  if (!stationLinks.length || !('IntersectionObserver' in window)) return;
+
+  const linksByTarget = new Map(
+    [...stationLinks].map(link => [link.getAttribute('href').slice(1), link])
+  );
+  const observer = new IntersectionObserver(entries => {
+    const current = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+    if (!current) return;
+
+    stationLinks.forEach(link => {
+      const isCurrent = link === linksByTarget.get(current.target.id);
+      link.classList.toggle('is-current', isCurrent);
+      if (isCurrent) link.setAttribute('aria-current', 'step');
+      else link.removeAttribute('aria-current');
+    });
+  }, { threshold: [0.2, 0.45, 0.7], rootMargin: '-15% 0px -55% 0px' });
+
+  linksByTarget.forEach((_, id) => {
+    const station = document.getElementById(id);
+    if (station) observer.observe(station);
   });
 }
 

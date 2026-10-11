@@ -27,102 +27,115 @@
       font-family: 'Heebo', sans-serif;
       background-color: #FFFFFF;
       background-image:
-        repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(30, 186, 230, 0.14) 31px, rgba(30, 186, 230, 0.14) 32px),
-        linear-gradient(to right, transparent 0, transparent 4.25rem, rgba(30, 186, 230, 0.2) 4.25rem, rgba(30, 186, 230, 0.2) 4.32rem, transparent 4.32rem),
-        radial-gradient(ellipse at 8% 8%, rgba(30, 186, 230, 0.045), transparent 27rem),
-        radial-gradient(ellipse at 95% 35%, rgba(30, 52, 69, 0.035), transparent 30rem);
-      background-attachment: fixed;
+        radial-gradient(circle, rgba(15, 23, 42, 0.34) 0.9px, transparent 1.05px),
+        linear-gradient(to right, transparent 0, transparent 4.25rem, rgba(30, 186, 230, 0.12) 4.25rem, rgba(30, 186, 230, 0.12) 4.32rem, transparent 4.32rem);
+      background-position: 0 0, 0 0;
+      background-size: 22px 22px, auto;
+      background-attachment: scroll;
     }
-    body.bg-slate-50 .survey-hero [class*="text-emerald-"],
-    body.bg-slate-50 .survey-hero [class*="text-teal-"] { color: #1EBAE6 !important; }
-    .survey-hero [class*="bg-emerald-"],
-    .survey-hero [class*="bg-teal-"] { background-color: rgba(30, 186, 230, 0.16) !important; }
     body.bg-slate-50, body.bg-slate-50 * {
       -webkit-user-select: none;
       user-select: none;
     }
     .survey-hero.survey-hero {
-      background-image:
-        radial-gradient(ellipse at 12% 85%, rgba(30, 186, 230, 0.24), transparent 26rem),
-        radial-gradient(ellipse at 90% 8%, rgba(30, 186, 230, 0.12), transparent 22rem),
-        linear-gradient(110deg, #1E3445 0%, #1E3445 66%, #152836 100%);
-      box-shadow: 0 28px 70px -32px rgba(30, 52, 69, 0.55);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
       animation: rise-in 650ms ease-out both;
     }
-    .hero-orbit {
-      position: absolute;
-      z-index: 0;
-      top: 24%;
-      left: 30%;
-      width: 8rem;
-      height: 8rem;
-      pointer-events: none;
-      opacity: 0.24;
-      transform: translateY(-50%);
-      transform-style: preserve-3d;
-      perspective: 700px;
-    }
-    .hero-orbit-ring {
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(125, 225, 255, 0.85);
-      border-radius: 50%;
-      box-shadow: 0 0 18px rgba(30, 186, 230, 0.16), inset 0 0 14px rgba(30, 186, 230, 0.12);
-      transform-style: preserve-3d;
-    }
-    .hero-orbit-ring:first-child {
-      animation: orbit-tilt 13s linear infinite;
-      transform: rotateX(68deg) rotateY(24deg);
-    }
-    .hero-orbit-ring:nth-child(2) {
-      inset: 0.75rem -0.75rem;
-      border-color: rgba(255, 255, 255, 0.75);
-      animation: orbit-counter 17s linear infinite;
-      transform: rotateX(55deg) rotateY(-38deg) rotateZ(35deg);
-    }
-    .hero-orbit-core {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 3.2rem;
-      height: 3.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.65);
-      border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, #fff 0, #7de1ff 18%, #1EBAE6 43%, #1E3445 78%);
-      box-shadow: 0 0 30px rgba(30, 186, 230, 0.6), inset -8px -8px 18px rgba(30, 52, 69, 0.55);
-      animation: core-float 4s ease-in-out infinite;
-      transform: translate3d(-50%, -50%, 28px);
-    }
-    .survey-hero > .relative { transform-style: preserve-3d; }
-    .survey-hero h2 { text-wrap: balance; letter-spacing: -0.035em; }
+    .survey-hero h2 { text-wrap: balance; letter-spacing: -0.035em; color: #172b3a; }
+    .survey-hero-copy { color: #526574; }
+    .survey-hero-kicker { color: #087e9e; background: #e8f8fc; }
+    .survey-hero-meta { color: #526574; background: transparent; border-color: transparent; }
+    .survey-hero-meta strong { color: #172b3a; }
+    .survey-project { background: transparent; border-color: transparent; color: #64748b; }
+    .survey-project strong, .survey-project-title { color: #1e3445; }
     .survey-stat {
-      background: linear-gradient(145deg, rgba(30, 186, 230, 0.2), rgba(255, 255, 255, 0.055));
-      box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
-      transform-style: preserve-3d;
-      transition: transform 220ms ease, background-color 180ms ease, box-shadow 220ms ease;
+      background: transparent;
+      box-shadow: none;
     }
-    .survey-stat:hover { transform: translateY(-3px) translateZ(10px); background-color: rgba(255, 255, 255, 0.08); }
+    .survey-stat strong { color: #087e9e; }
+    .survey-stat p { color: #64748b; }
+    .count-up { display: inline-block; font-variant-numeric: tabular-nums; }
+    @media (hover: hover) {
+      .count-up { transition: transform 180ms ease; }
+      .count-up:hover { transform: translateY(-2px) scale(1.06); }
+    }
     main section > div:first-child h2 { letter-spacing: -0.02em; }
-    .reading-guide {
-      border: 1px solid rgba(30, 52, 69, 0.12);
-      border-radius: 1.5rem;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 12px 34px -26px rgba(30, 52, 69, 0.38);
+    .station-nav {
+      position: fixed;
+      z-index: 30;
+      top: 50%;
+      right: 0.75rem;
+      width: 9rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: none;
+      backdrop-filter: blur(12px);
+      transform: translateY(-50%);
     }
-    .reading-step {
+    .station-timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      overflow: visible;
+      padding: 0.25rem 0;
+    }
+    .station-timeline li { min-width: 0; list-style: none; }
+    .station-timeline::before {
+      position: absolute;
+      top: 1.5rem;
+      bottom: 1.5rem;
+      right: 1.25rem;
+      width: 2px;
+      background: linear-gradient(to bottom, #1EBAE6, #cbd5e1 75%, transparent);
+      content: "";
+    }
+    .station-timeline a {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 2.5rem;
+      padding: 0.15rem;
+      color: #64748b;
+      text-align: right;
+    }
+    .station-timeline a {
       min-width: 0;
-      border: 1px solid rgba(30, 52, 69, 0.12);
-      border-radius: 1rem;
-      background: linear-gradient(145deg, #fff, #f7fcfe);
-      transform-style: preserve-3d;
-      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      transform: none;
     }
-    .reading-step:hover, .reading-step:focus-visible {
-      border-color: rgba(30, 186, 230, 0.7);
-      box-shadow: 0 10px 24px -18px rgba(30, 52, 69, 0.5);
-      transform: perspective(800px) rotateX(3deg) rotateY(-2deg) translateY(-3px) translateZ(7px);
+    .station-dot {
+      display: grid;
+      flex: 0 0 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-items: center;
+      border: 2px solid #dbe5ec;
+      border-radius: 9999px;
+      background: #fff;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 800;
+      transition: color 220ms ease, background 220ms ease, border-color 220ms ease;
     }
-    .reading-step:focus-visible, .section-transition a:focus-visible, .report-return:focus-visible {
+    .station-timeline a:hover .station-dot,
+    .station-timeline a.is-current .station-dot {
+      border-color: #1EBAE6;
+      background: #e8f8fc;
+      color: #087e9e;
+    }
+    .station-timeline a.is-current { color: #1e3445; }
+    .station-timeline a:focus-visible { outline: 3px solid rgba(30, 186, 230, 0.45); outline-offset: 3px; }
+    .station-timeline-label { font-size: 0.72rem; font-weight: 700; }
+    .station-timeline a:focus-visible, .report-return:focus-visible {
       outline: 3px solid rgba(30, 186, 230, 0.6);
       outline-offset: 3px;
     }
@@ -147,31 +160,23 @@
       font-size: 0.65rem;
     }
     .section-transition {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.15rem 0;
-      color: #64748b;
-      font-size: 0.75rem;
+      position: relative;
+      height: 3rem;
+      margin-block: 0.75rem;
     }
     .section-transition::before {
-      width: 2rem;
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 50%;
       height: 1px;
-      flex: 0 0 auto;
-      background: rgba(30, 186, 230, 0.7);
+      background: repeating-linear-gradient(to right, rgba(30, 52, 69, 0.52) 0 8px, transparent 8px 14px);
       content: "";
     }
-    .section-transition a {
-      color: #1E3445;
-      font-weight: 800;
-      text-decoration: underline;
-      text-decoration-color: rgba(30, 186, 230, 0.7);
-      text-underline-offset: 3px;
-    }
     .report-end {
-      border: 1px solid rgba(30, 186, 230, 0.28);
-      border-radius: 1.5rem;
-      background: linear-gradient(110deg, #fff, #e8f8fc);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
     #kpi-section .grid > div,
     #demographics-section .grid > div,
@@ -179,35 +184,31 @@
     #charts-drivers .grid > div,
     #charts-perception .grid > div,
     #action-plan .timeline-card {
-      border-color: var(--dashboard-line);
-      box-shadow: 0 8px 28px -18px rgba(15, 23, 42, 0.34), 0 1px 2px rgba(15, 23, 42, 0.04);
-      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      box-shadow: none;
+      transition: none;
     }
     #demographics-section .grid > div,
     #charts-awareness .grid > div,
     #charts-drivers .grid > div,
     #charts-perception .grid > div {
-      background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(249, 252, 251, 0.96));
+      background-image: none;
+      background-color: transparent;
     }
-    #kpi-section .grid,
-    #demographics-section .grid,
-    #charts-awareness .grid,
-    #charts-drivers .grid,
-    #charts-perception .grid,
-    #action-plan .timeline-list { perspective: 1200px; }
-    #kpi-section .grid > div,
-    #demographics-section .grid > div,
-    #charts-awareness .grid > div,
-    #charts-drivers .grid > div,
-    #charts-perception .grid > div,
-    #action-plan .timeline-card { transform-style: preserve-3d; }
+    #kpi-section .grid > div:hover,
     #demographics-section .grid > div:hover,
     #charts-awareness .grid > div:hover,
     #charts-drivers .grid > div:hover,
     #charts-perception .grid > div:hover,
     #action-plan .timeline-item:hover .timeline-card {
-      transform: rotateX(1.5deg) rotateY(-1.5deg) translateY(-3px) translateZ(5px);
-      box-shadow: 0 18px 36px -22px rgba(15, 23, 42, 0.4);
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    #survey-overview, #kpi-section .grid > div,
+    #demographics-section .grid > div, #charts-awareness .grid > div,
+    #charts-drivers .grid > div, #charts-perception .grid > div,
+    #action-plan .timeline-card, #report-end, footer {
+      background: transparent !important;
+      background-image: none !important;
     }
     #action-plan .timeline-list {
       position: relative;
@@ -241,7 +242,7 @@
     }
     #action-plan .timeline-card { border-radius: 1.25rem; }
     #action-plan .timeline-card h3 { line-height: 1.55; }
-    footer { background-color: #FFFFFF; background-image: linear-gradient(110deg, #FFFFFF, #E8F8FC); }
+    footer { background-color: transparent; background-image: none; }
     .timeline-marker { background-color: #1EBAE6 !important; color: #1E3445 !important; }
     #action-plan .timeline-item:nth-child(even) .timeline-marker {
       background-color: #1E3445 !important;
@@ -251,30 +252,70 @@
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes orbit-tilt {
-      from { transform: rotateX(68deg) rotateY(24deg) rotateZ(0deg); }
-      to { transform: rotateX(68deg) rotateY(24deg) rotateZ(360deg); }
+    .motion-ready [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 600ms ease, transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition-delay: var(--reveal-delay, 0ms);
     }
-    @keyframes orbit-counter {
-      from { transform: rotateX(55deg) rotateY(-38deg) rotateZ(35deg); }
-      to { transform: rotateX(55deg) rotateY(-38deg) rotateZ(-325deg); }
+    .motion-ready [data-reveal].is-revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
-    @keyframes core-float {
-      0%, 100% { transform: translate3d(-50%, -50%, 22px); }
-      50% { transform: translate3d(-50%, -50%, 38px); }
+    .survey-stat, .survey-project, .survey-hero-meta,
+    .report-end, #kpi-section .grid > div,
+    #demographics-section .grid > div, #charts-awareness .grid > div,
+    #charts-drivers .grid > div, #charts-perception .grid > div,
+    #action-plan .timeline-card {
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
     }
-    @media (min-width: 768px) {
-      .hero-orbit { display: block; }
+    .survey-stat:hover, #kpi-section .grid > div:hover,
+    #demographics-section .grid > div:hover, #charts-awareness .grid > div:hover,
+    #charts-drivers .grid > div:hover, #charts-perception .grid > div:hover,
+    #action-plan .timeline-card:hover,
+    #action-plan .timeline-item:hover .timeline-card {
+      transform: none !important;
+      box-shadow: none !important;
     }
-    @media (max-width: 767px) {
-      .hero-orbit { display: none; }
+    .station-heading { position: relative; }
+    .station-heading::after {
+      position: absolute;
+      top: 0;
+      right: -1rem;
+      bottom: 0;
+      width: 3px;
+      border-radius: 99px;
+      background: linear-gradient(#1EBAE6, #dbeafe);
+      content: "";
     }
     @media (hover: none) {
-      .survey-stat:hover { transform: none; }
-      .reading-step:hover, #demographics-section .grid > div:hover,
-      #charts-awareness .grid > div:hover, #charts-drivers .grid > div:hover,
-      #charts-perception .grid > div:hover,
-      #action-plan .timeline-item:hover .timeline-card { transform: none; }
+      .station-timeline a:hover .station-dot { color: #64748b; }
+    }
+    @media (max-width: 640px) {
+      .station-nav { right: 0.2rem; width: 3.25rem; padding: 0.15rem; }
+      .station-timeline { gap: 0.4rem; }
+      .station-timeline a { justify-content: center; padding: 0; }
+      .station-timeline::before { right: 50%; transform: translateX(50%); }
+      .station-dot { flex-basis: 2.35rem; width: 2.35rem; height: 2.35rem; font-size: 0.65rem; }
+      .station-timeline-label { display: none; }
+      main { padding-right: 3.5rem !important; }
+    }
+    @media (min-width: 641px) and (max-width: 1099px) {
+      .station-nav { right: 0.3rem; width: 3.25rem; padding: 0.15rem; }
+      .station-timeline a { justify-content: center; padding: 0; }
+      .station-timeline::before { right: 50%; transform: translateX(50%); }
+      .station-timeline-label { display: none; }
+      main { padding-right: 4rem !important; }
+    }
+    @media (min-width: 1100px) {
+      main {
+        width: calc(100% - 11rem);
+        max-width: 69rem;
+        margin-right: 10rem !important;
+        margin-left: auto !important;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -283,6 +324,7 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
+      .motion-ready [data-reveal] { opacity: 1; transform: none; }
     }
     @media print {
       .no-print { display: none !important; }
@@ -291,8 +333,7 @@
       .survey-hero, #kpi-section .grid > div, #demographics-section .grid > div,
       #charts-awareness .grid > div, #charts-drivers .grid > div,
       #charts-perception .grid > div, #action-plan .timeline-card { box-shadow: none !important; }
-        .reading-guide, .reading-step, .report-end { box-shadow: none !important; }
-      .hero-orbit { display: none !important; }
+        .station-nav, .report-end { box-shadow: none !important; }
     }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -302,76 +343,68 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen selection:bg-emerald-600 selection:text-white">
 
+  <nav class="station-nav no-print" aria-label="التنقل بين محطات التقرير">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <ol class="station-timeline list-none m-0" aria-label="محطات التقرير الست">
+        <li><a href="#kpi-section" aria-label="תחנה ראשונה: תמונת מצב"><span class="station-dot">01</span><span class="station-timeline-label">תמונת מצב</span></a></li>
+        <li><a href="#demographics-section" aria-label="תחנה שנייה: מי השתתף"><span class="station-dot">02</span><span class="station-timeline-label">מי השתתף?</span></a></li>
+        <li><a href="#charts-awareness" aria-label="תחנה שלישית: פער המודעות"><span class="station-dot">03</span><span class="station-timeline-label">פער המודעות</span></a></li>
+        <li><a href="#charts-drivers" aria-label="תחנה רביעית: צרכים והעדפות"><span class="station-dot">04</span><span class="station-timeline-label">צרכים והעדפות</span></a></li>
+        <li><a href="#charts-perception" aria-label="תחנה חמישית: תפיסה ושימוש"><span class="station-dot">05</span><span class="station-timeline-label">תפיסה ושימוש</span></a></li>
+        <li><a href="#action-plan" aria-label="תחנה שישית: תוכנית פעולה"><span class="station-dot">06</span><span class="station-timeline-label">תוכנית פעולה</span></a></li>
+      </ol>
+    </div>
+  </nav>
+
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
     <!-- Survey Overview -->
-    <section id="survey-overview" aria-labelledby="survey-overview-title" class="survey-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-l from-slate-950 via-teal-950 to-emerald-900 p-6 text-white shadow-xl sm:p-8 lg:p-10">
-      <div aria-hidden="true" class="absolute -left-16 -top-24 -z-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl"></div>
-      <div aria-hidden="true" class="absolute -bottom-32 right-1/3 -z-10 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl"></div>
-      <div class="hero-orbit" aria-hidden="true">
-        <span class="hero-orbit-ring"></span>
-        <span class="hero-orbit-ring"></span>
-        <span class="hero-orbit-core"></span>
-      </div>
-      <div class="relative z-10 grid items-center gap-8 lg:grid-cols-[1.1fr_1fr]">
+    <section id="survey-overview" aria-labelledby="survey-overview-title" class="survey-hero relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-10">
+      <div class="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
-          <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-100">
-            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+          <span class="survey-hero-kicker inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold">
+            <span class="h-2 w-2 rounded-full bg-sky-500"></span>
             תחילת הסקירה • דוח סקר שנתי 2025
           </span>
           <h2 id="survey-overview-title" class="mt-4 text-2xl font-black leading-tight sm:text-3xl lg:text-4xl">בין מודעות לפעילות:<br class="hidden sm:block"> תמונת מצב מרכז הספורט</h2>
-          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-200 sm:text-base">
+          <p class="survey-hero-copy mt-3 max-w-2xl text-sm leading-relaxed sm:text-base">
             הסקירה עוברת מתמונת המשיבים, דרך פערי המודעות והצרכים, ועד להצעות פעולה המבוססות על הממצאים.
           </p>
-          <div class="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-slate-100">
+          <div class="survey-hero-meta mt-6 inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm">
             <span aria-hidden="true">📊</span>
-            <span><strong class="font-extrabold text-white">283</strong> משתתפים בסקר</span>
+            <span><strong class="font-extrabold" data-counter="283">283</strong> משתתפים בסקר</span>
           </div>
-          <div class="mt-4 max-w-xl rounded-2xl border border-emerald-200/20 bg-slate-950/30 p-4 text-sm leading-relaxed text-slate-200 backdrop-blur-sm">
-            <div class="mb-1 flex items-center gap-2 font-bold text-emerald-200">
+          <div class="survey-project mt-4 max-w-xl rounded-2xl border p-4 text-sm leading-relaxed">
+            <div class="survey-project-title mb-1 flex items-center gap-2 font-bold">
               <span aria-hidden="true">🎓</span>
               <span>פרויקט סטודנטים</span>
             </div>
             <p>
-              הסקר נערך על ידי <strong class="text-white">עבד, אליאס ודיינה</strong>
-              במסגרת הקורס <strong class="text-white">״מבוא לתקשורת שיווקית״</strong>,
-              באמצעות <strong class="text-white">Google Forms</strong>.
+              הסקר נערך על ידי <strong>עבד, אליאס ודיינה</strong>
+              במסגרת הקורס <strong>״מבוא לתקשורת שיווקית״</strong>,
+              באמצעות <strong>Google Forms</strong>.
             </p>
           </div>
         </div>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div class="survey-stat rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-            <div class="text-2xl font-black text-emerald-300 sm:text-3xl">58.7%</div>
-            <p class="mt-1 text-xs leading-relaxed text-slate-200">מהמשיבים לא היו מודעים לקיום המרכז</p>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <div class="survey-stat rounded-2xl p-5">
+            <div class="text-3xl font-black text-sky-700 sm:text-4xl"><span data-counter="58.7" data-decimals="1">58.7</span>%</div>
+            <p class="mt-1 text-sm leading-relaxed">מהמשיבים לא היו מודעים לקיום המרכז</p>
           </div>
-          <div class="survey-stat rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-            <div class="text-2xl font-black text-cyan-300 sm:text-3xl">13.8%</div>
-            <p class="mt-1 text-xs leading-relaxed text-slate-200">מהמשיבים משתמשים במתקני המרכז</p>
+          <div class="survey-stat rounded-2xl p-5">
+            <div class="text-3xl font-black text-sky-700 sm:text-4xl"><span data-counter="13.8" data-decimals="1">13.8</span>%</div>
+            <p class="mt-1 text-sm leading-relaxed">מהמשיבים משתמשים במתקני המרכז</p>
           </div>
         </div>
       </div>
     </section>
 
-    <nav aria-labelledby="reading-guide-title" class="reading-guide -mt-4 p-5 sm:p-6">
-      <div class="mb-4">
-        <p class="step-label"><span>↘</span> המסלול בסקירה</p>
-        <h2 id="reading-guide-title" class="text-base font-black text-slate-900 sm:text-lg">מתחילים בתמונה הרחבה ומסיימים במה כדאי לעשות</h2>
-        <p class="mt-1 text-xs leading-relaxed text-slate-600">כל תחנה עונה על שאלה שמובילה לבאה אחריה. אפשר לבחור תחנה, או להתקדם לפי הסדר.</p>
-      </div>
-      <ol class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#kpi-section"><span class="step-label mb-0 shrink-0"><span>01</span></span><span><strong class="block text-xs font-extrabold text-slate-800">תמונת מצב</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מהם הנתונים הבולטים בסקר?</span></span></a></li>
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#demographics-section"><span class="step-label mb-0 shrink-0"><span>02</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מי השתתף?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מי קהל המשיבים ומה מאפיין אותו?</span></span></a></li>
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-awareness"><span class="step-label mb-0 shrink-0"><span>03</span></span><span><strong class="block text-xs font-extrabold text-slate-800">האם מכירים את המרכז?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">מהם פערי המודעות ואיך נחשפים?</span></span></a></li>
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-drivers"><span class="step-label mb-0 shrink-0"><span>04</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה יגרום לסטודנטים להגיע?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">אילו שיפורים ופעילויות מבוקשים?</span></span></a></li>
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#charts-perception"><span class="step-label mb-0 shrink-0"><span>05</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה חושבים ומה קורה בפועל?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">איך תופסים את המרכז וכמה משתמשים בו?</span></span></a></li>
-        <li><a class="reading-step flex h-full items-start gap-3 p-3" href="#action-plan"><span class="step-label mb-0 shrink-0"><span>06</span></span><span><strong class="block text-xs font-extrabold text-slate-800">מה עושים מכאן?</strong><span class="mt-0.5 block text-[11px] leading-relaxed text-slate-500">ממצאים הופכים לתוכנית פעולה.</span></span></a></li>
-      </ol>
-    </nav>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- KPI Section with Animated Counters -->
     <section id="kpi-section" class="space-y-4">
-      <div class="flex items-center justify-between border-r-4 border-emerald-500 pr-3">
+      <div class="station-heading flex items-center justify-between border-r-4 border-emerald-500 pr-3">
         <div>
           <span class="step-label"><span>01</span> תחנה ראשונה • התמונה הרחבה</span>
           <h2 class="text-lg font-black text-slate-900">תמונת מצב מנהלים</h2>
@@ -445,11 +478,11 @@
       </div>
     </section>
 
-    <div class="section-transition"><span>מכאן בודקים</span><a href="#demographics-section">מי השיב על הסקר ←</a></div>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- Demographics Section -->
     <section id="demographics-section" class="space-y-4">
-      <div class="border-r-4 border-slate-700 pr-3">
+      <div class="station-heading border-r-4 border-slate-700 pr-3">
         <span class="step-label"><span>02</span> תחנה שנייה • מי ענה?</span>
         <h2 class="text-lg font-black text-slate-900">פילוח דמוגרפי של קהל היעד</h2>
         <p class="text-xs text-slate-500">התפלגות המשיבים לפי שנת לימוד, גיל ותחומי התמחות מובילים בקמפוס</p>
@@ -518,11 +551,11 @@
       </div>
     </section>
 
-    <div class="section-transition"><span>אחרי שמכירים את הקהל, שואלים</span><a href="#charts-awareness">האם הוא מכיר את המרכז ←</a></div>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- Awareness Section -->
     <section id="charts-awareness" class="space-y-4">
-      <div class="border-r-4 border-rose-500 pr-3">
+      <div class="station-heading border-r-4 border-rose-500 pr-3">
         <span class="step-label"><span>03</span> תחנה שלישית • פער המודעות</span>
         <h2 class="text-lg font-black text-slate-900">מודעות למרכז ואפקטיביות ערוצי השיווק</h2>
         <p class="text-xs text-slate-500">ניתוח פערי השיווק מול ערוצי המידע הפעילים בקמפוס</p>
@@ -567,11 +600,11 @@
       </div>
     </section>
 
-    <div class="section-transition"><span>כעת עוברים מהבעיה לפתרונות</span><a href="#charts-drivers">מה יעודד שימוש ←</a></div>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- Drivers & Activities Section -->
     <section id="charts-drivers" class="space-y-4">
-      <div class="border-r-4 border-emerald-500 pr-3">
+      <div class="station-heading border-r-4 border-emerald-500 pr-3">
         <span class="step-label"><span>04</span> תחנה רביעית • צרכים והעדפות</span>
         <h2 class="text-lg font-black text-slate-900">גורמים מעודדי שימוש ופעילויות מבוקשות</h2>
         <p class="text-xs text-slate-500">מה נדרש כדי להגביר את נוכחות הסטודנטים במתקנים</p>
@@ -604,11 +637,11 @@
       </div>
     </section>
 
-    <div class="section-transition"><span>הצרכים מקבלים הקשר דרך</span><a href="#charts-perception">התפיסה והשימוש בפועל ←</a></div>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- Perception & Usage Funnel -->
     <section id="charts-perception" class="space-y-4">
-      <div class="border-r-4 border-emerald-600 pr-3">
+      <div class="station-heading border-r-4 border-emerald-600 pr-3">
         <span class="step-label"><span>05</span> תחנה חמישית • מהתפיסה להתנהגות</span>
         <h2 class="text-lg font-black text-slate-900">תפיסת המותג ומשפך השימוש בפועל</h2>
         <p class="text-xs text-slate-500">כיצד נתפס המרכז בעיני המשתמשים מול נתוני ההמרה בפועל</p>
@@ -647,11 +680,11 @@
       </div>
     </section>
 
-    <div class="section-transition"><span>אחרי שחיברנו בין הממצאים, מסכמים</span><a href="#action-plan">מה כדאי לעשות ←</a></div>
+    <div class="section-transition" aria-hidden="true"></div>
 
     <!-- Operational Roadmap -->
     <section id="action-plan" class="space-y-4 break-inside-avoid">
-      <div class="border-r-4 border-emerald-700 pr-3">
+      <div class="station-heading border-r-4 border-emerald-700 pr-3">
         <span class="step-label"><span>06</span> תחנה שישית • מסקנות ופעולה</span>
         <h2 class="text-lg font-black text-slate-900">תוכנית עבודה אופרטיבית להנהלה לשנת 2025</h2>
         <p class="text-xs text-slate-500">ארבעה שלבים לפי סדר יישום: חשיפה, נגישות, שדרוג מתקנים ובניית קהילה</p>
@@ -733,6 +766,8 @@
 
       </ol>
     </section>
+
+    <div class="section-transition" aria-hidden="true"></div>
 
     <section id="report-end" aria-labelledby="report-end-title" class="report-end flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
       <div>
